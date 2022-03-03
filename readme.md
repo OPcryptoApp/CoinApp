@@ -1,13 +1,5 @@
-Read me Read me Read me Read me Read me 
+Ohjelmistoprojekti 2 -kurssin projekti github-sivu
 
-readmore
+`npm install`
 
-npm install @react-navigation/bottom-tabs
-
-expo install react-native-screens react-native-safe-area-context
-
-npm install @react-navigation/native
-
-npm install @react-navigation/bottom-tabs
-
-npm install react-native-ionicons@^4.x
+`expo install`

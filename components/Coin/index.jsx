@@ -5,6 +5,13 @@ import styles from './styles'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 
+// import .env tiedostosta api-avaimet ja muut, jotka ei kuulu githubiin
+import { COIN_API, SECRET_KEY } from "@env"
+
+// import 'dotenv/config'
+// require('dotenv').config()
+
+
 const storeData = async (value) => {
   console.log('value', value)
   try {
@@ -37,7 +44,8 @@ export default function Coin() {
 
   useEffect(async () => {
     var a = asyncNumber
-
+    console.log(process.env)
+    console.log("response data", COIN_API);
     try {
       const value = await AsyncStorage.getItem('@storage_Key')
       if (value !== null) {
@@ -64,8 +72,8 @@ export default function Coin() {
       },
       headers: {
         'x-rapidapi-host': 'coinranking1.p.rapidapi.com',
-        //  api avain.
-        'x-rapidapi-key': ''
+        // Tuomon api avain.
+        'x-rapidapi-key': process.env.COIN_API
       }
     }).then(function (response) {
       console.log("response data", response.data);
