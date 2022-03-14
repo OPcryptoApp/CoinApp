@@ -8,7 +8,9 @@ export default function PortfolioWindow(props) {
   return (
     <View style={{ alignItems: 'center', paddingBottom: 50 }}>
       <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20 }}>PORTFOLIO</Text>
-      <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 40, padding: 10 }}>$7 867,67</Text>
+      {props.pfCoins !== undefined &&
+        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 40, padding: 10 }}>${props.pfCoins.dollars}</Text>
+      }
       <Text style={{ color: 'red' }}>17.63%</Text>
     </View>
   )

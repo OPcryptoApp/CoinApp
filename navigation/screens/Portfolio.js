@@ -47,6 +47,28 @@ const BuyCoins = (props) => {
     storePfData(pf)
     //setPortfolioCoins({ ...portfolioCoins, "coins": volume + 100 })
     console.log('portfoliocoins after buying', portfolioCoins)
+
+  }
+
+  const sellCoin = coin_id => {
+    var coin
+    var index
+    var pf = portfolioCoins
+    portfolioCoins.coins.map((c, i) => {
+      if (c.uuid == coin_id) {
+        coin = c
+        index = i
+      }
+    })
+
+    coin.volume = coin.volume - 50.0
+    pf.dollars = pf.dollars + 50.0
+    pf.coins[index] = coin
+
+    setPortfolioCoins(pf)
+    storePfData(pf)
+    //setPortfolioCoins({ ...portfolioCoins, "coins": volume + 100 })
+    console.log('portfoliocoins after selling', portfolioCoins)
   }
 
   return (
@@ -62,6 +84,18 @@ const BuyCoins = (props) => {
         title="buy 100 ETH"
         color="#841584"
         accessibilityLabel="Buy 100 eth with 100 dollah"
+      />
+      <Button
+        onPress={() => sellCoin("Qwsogvtv82FCd")}
+        title="sell 50 BTC"
+        color="#841584"
+        accessibilityLabel="Sell 50 btc with 50 dollah"
+      />
+      <Button
+        onPress={() => sellCoin("razxDUgYGNAdQ")}
+        title="sell 50 ETH"
+        color="#841584"
+        accessibilityLabel="Buy 50 eth with 50 dollah"
       />
     </View>
   )
@@ -107,7 +141,7 @@ export default function PortfolioScreen({ navigation }) {
 
     try {
       const asyncData = await retrievePfData()
-      setPortfolioCoins(asyncData)
+      asyncData != null && setPortfolioCoins(asyncData)
     } catch (e) {
       console.log('erroe', e)
     }
