@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, FlatList } from 'react-native';
 import styles from './styles'
-
+import millify from 'millify';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 
 // import .env tiedostosta api-avaimet ja muut, jotka ei kuulu githubiin
 import { COIN_API, SECRET_KEY } from "@env"
 
-// import 'dotenv/config'
-// require('dotenv').config()
+//import 'dotenv/config'
+//require('dotenv').config()
 
 
 const storeData = async (value) => {
@@ -87,27 +87,39 @@ export default function Coin() {
   console.log('listData', listData)
 
   const DataItem = ({ rank }) => (
-    <Text>            Rank: {rank}</Text>
-  )
+    <Text> Rank: {rank}</Text>
+  );
 
+  
+
+  
   const renderItem = ({ item }) => (
+    
     <View style={styles.item}>
+      
+      <View style={styles.flexRow}>
       <Image
         source={{ uri: item.iconUrl }}
         style={styles.image}
       />
+      <View style={{justifyContent:'center'}}>
       <Text
         style={styles.name}>
         {item.name}
       </Text>
-      <View style={styles.rank}>
-        <DataItem
-          rank={item.rank} />
+      </View>
+      <View style={styles.left}>
+      <View style={styles.left}>
+        <Text style={styles.price}> ${millify(item.price)}</Text>
+       
       </View>
       <Text
         style={styles.change}>
         {item.change}%
       </Text>
+      </View>
+      </View>
+      
     </View>
   )
 
@@ -119,7 +131,10 @@ export default function Coin() {
         data={listData}
         renderItem={renderItem}
         keyExtractor={(item, i) => 'key' + i}
+        
       />
+     
+     
 
       {/*  <Image 
                     source={{
