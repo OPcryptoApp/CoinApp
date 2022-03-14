@@ -4,6 +4,7 @@ import styles from './styles'
 import millify from 'millify';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
+import { SvgUri } from 'react-native-svg';
 
 // import .env tiedostosta api-avaimet ja muut, jotka ei kuulu githubiin
 import { COIN_API, SECRET_KEY } from "@env"
@@ -98,15 +99,22 @@ export default function Coin() {
     <View style={styles.item}>
       
       <View style={styles.flexRow}>
-      <Image
+        <SvgUri 
+        width="30"
+        height="30"
+        style={styles.image}
+        uri={item.iconUrl}
+        />
+      {/*<Image
         source={{ uri: item.iconUrl }}
         style={styles.image}
-      />
+      />*/}
       <View style={{justifyContent:'center'}}>
       <Text
         style={styles.name}>
         {item.name}
       </Text>
+      <Text style={styles.sub}>{item.symbol}</Text>
       </View>
       <View style={styles.left}>
       <View style={styles.left}>

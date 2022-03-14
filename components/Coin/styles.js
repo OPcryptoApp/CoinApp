@@ -19,15 +19,13 @@ export default StyleSheet.create({
       
     },
     image: {
-        height: 30,
-        width: 30,
+       
         marginRight: 10,
         alignSelf: 'center',
         //justifyContent:'center',
 
     },
     name: {
-        marginLeft:5,
         color:'white',
         fontSize: 15,
         color:'white',
@@ -36,6 +34,11 @@ export default StyleSheet.create({
        /* fontWeight:'bold',
         justifyContent: 'flex-start',
         flexDirection: 'row',*/
+    },
+    sub:{
+        color:'gray',
+        fontSize:10,
+        fontWeight:'bold'
     },
     rank: {
         alignItems: 'flex-end',
