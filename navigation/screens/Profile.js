@@ -1,11 +1,21 @@
 import React from "react";
-import { View, Button, StyleSheet } from "react-native";
+import { View, Button, StyleSheet, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
 import {Avatar, Title, Caption, Text, TouchableRipple} from 'react-native-paper';
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "../../components/Profile/styles";
 
 export default function ProfileScreen({navigation}){
+
+    const handleSignOut = () => {
+        //  auth
+          //  .signOut()
+           // .then(() => {
+              navigation.navigate("Login");
+            //})
+           // .catch(error => alert(error.message))
+        }
+
     return (
     
     <SafeAreaView style={styles.container}>
@@ -44,6 +54,15 @@ export default function ProfileScreen({navigation}){
                 <Caption style={styles.caption}>Currencies</Caption>
             </View>
         </View>
+        <View style={styles.logout}>
+      
+        <TouchableOpacity
+            onPress={handleSignOut}
+            style={styles.button}
+        >
+        <Text style={styles.buttonText}>Sign out</Text>
+      </TouchableOpacity>
+    </View>
     </SafeAreaView>
 
        

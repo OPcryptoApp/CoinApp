@@ -10,6 +10,7 @@ import HomeScreen from './screens/Home';
 import PortfolioScreen from './screens/Portfolio';
 import MarketScreen from './screens/Market'
 import ProfileScreen from './screens/Profile';
+import LoginScreen from './screens/Login';
 
 //screen names
 
@@ -17,6 +18,7 @@ const homeName = 'Home';
 const portfolioName = 'Portfolio';
 const marketName = 'Market';
 const profileName = 'Profile';
+const loginName = 'Login';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,7 +28,7 @@ export default function MainContainer() {
 
     return (
         <NavigationContainer>
-            <Tab.Navigator initialRouteName={homeName}
+            <Tab.Navigator initialRouteName={loginName}
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused, color, size }) => {
                         let iconName;
@@ -49,6 +51,7 @@ export default function MainContainer() {
                         return <Ionicons name={iconName} size={30}/>
                     },
                 })}>
+                     <Tab.Screen options={{tabBarStyle: {display: "none"}, tabBarButton: (props) => null, }} name = {loginName} component ={LoginScreen}   />
                      <Tab.Screen name = {homeName} component ={HomeScreen}   />
                      <Tab.Screen name = {portfolioName} component ={PortfolioScreen}   />
                      <Tab.Screen name = {marketName} component ={MarketScreen}   />
