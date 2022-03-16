@@ -46,8 +46,14 @@ export default StyleSheet.create({
         flexDirection: 'row',
  
     },
-    change: {
-        color: 'gray', //'#10C22C',
+    changeNeg: {
+        color: '#c71400',
+        textAlign:'right',
+        fontWeight:'bold',
+    },
+
+    changePosit: {
+        color: '#10C22C',
         textAlign:'right',
         fontWeight:'bold',
     },

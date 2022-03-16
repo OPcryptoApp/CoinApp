@@ -95,18 +95,14 @@ export default function Coin() {
     if (val < 0) {
       return(
       <Text
-        style={{color: '#c71400',
-        textAlign:'right',
-        fontWeight:'bold',}}>
+        style={styles.changeNeg}>
         {val}%
       </Text>
       )
     } else {
       return(
       <Text
-        style={{color: '#3abf00',
-        textAlign:'right',
-        fontWeight:'bold',}}>
+        style={styles.changePosit}>
         {val}%
       </Text>
       )
