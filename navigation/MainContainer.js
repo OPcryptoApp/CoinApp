@@ -8,15 +8,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 // import screens 
 import HomeScreen from './screens/Home';
 import PortfolioScreen from './screens/Portfolio';
-import SettingScreen from './screens/Settings';
-import { Settings } from 'react-native';
+import MarketScreen from './screens/Market'
 import ProfileScreen from './screens/Profile';
 
 //screen names
 
 const homeName = 'Home';
 const portfolioName = 'Portfolio';
-const settingsName = 'Settings';
+const marketName = 'Market';
 const profileName = 'Profile';
 
 const Tab = createBottomTabNavigator();
@@ -39,9 +38,9 @@ export default function MainContainer() {
                         } else if (rn == portfolioName) {
 
                             iconName = focused ? 'bar-chart' : 'bar-chart-outline'
-                        } else if (rn == settingsName) {
+                        } else if (rn == marketName) {
 
-                            iconName = focused ? 'settings' : 'settings-outline'
+                            iconName = focused ? 'logo-bitcoin' : 'cash-outline'
                         } else if (rn == profileName) {
 
                             iconName = focused ? 'person-circle' : 'person-circle-outline'
@@ -52,7 +51,7 @@ export default function MainContainer() {
                 })}>
                      <Tab.Screen name = {homeName} component ={HomeScreen}   />
                      <Tab.Screen name = {portfolioName} component ={PortfolioScreen}   />
-                     <Tab.Screen name = {settingsName} component ={SettingScreen}   />
+                     <Tab.Screen name = {marketName} component ={MarketScreen}   />
                      <Tab.Screen name = {profileName} component ={ProfileScreen}   />
 
 
