@@ -91,7 +91,27 @@ export default function Coin() {
     <Text> Rank: {rank}</Text>
   );
 
-  
+  const PercentageColor = ({val}) => {
+    if (val < 0) {
+      return(
+      <Text
+        style={{color: '#c71400',
+        textAlign:'right',
+        fontWeight:'bold',}}>
+        {val}%
+      </Text>
+      )
+    } else {
+      return(
+      <Text
+        style={{color: '#3abf00',
+        textAlign:'right',
+        fontWeight:'bold',}}>
+        {val}%
+      </Text>
+      )
+    }
+  };
 
   
   const renderItem = ({ item }) => (
@@ -121,10 +141,14 @@ export default function Coin() {
         <Text style={styles.price}> ${millify(item.price)}</Text>
        
       </View>
-      <Text
+      <PercentageColor 
+        val={item.change}
+        />
+
+      {/*<Text
         style={styles.change}>
         {item.change}%
-      </Text>
+    </Text>*/}
       </View>
       </View>
       
