@@ -10,7 +10,11 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.1.0",
+    "@fortawesome/free-solid-svg-icons": "^6.1.0",
+    "@fortawesome/react-fontawesome": "^0.1.18",
     "@react-native-async-storage/async-storage": "~1.15.0",
+    "@react-native-community/masked-view": "^0.1.11",
     "@react-navigation/bottom-tabs": "^6.2.0",
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/stack": "^6.1.1",
@@ -22,12 +26,16 @@
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
     "react-native-dotenv": "^3.3.1",
+    "react-native-gesture-handler": "^2.3.2",
     "react-native-ionicons": "^4.6.5",
     "react-native-paper": "^4.11.2",
-    "react-native-safe-area-context": "3.3.2",
+    "react-native-reanimated": "^2.4.1",
+    "react-native-safe-area-context": "^3.3.2",
     "react-native-screens": "~3.10.1",
     "react-native-vector-icons": "^9.1.0",
-    "react-native-web": "0.17.1"
+    "react-native-web": "0.17.1",
+    "react-navigation": "^4.4.4",
+    "react-text-input": "^0.0.8"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

@@ -4,6 +4,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {Avatar, Title, Caption, Text, TouchableRipple} from 'react-native-paper';
 import { SafeAreaView } from "react-native-safe-area-context";
 import styles from "../../components/Profile/styles";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import EditProfileScreen from "./EditProfile";
 
 export default function ProfileScreen({navigation}){
 
@@ -14,6 +16,10 @@ export default function ProfileScreen({navigation}){
               navigation.navigate("Login");
             //})
            // .catch(error => alert(error.message))
+        }
+
+        const handleEdit = () => {
+            navigation.navigate("Settings");
         }
 
     return (
@@ -61,6 +67,13 @@ export default function ProfileScreen({navigation}){
             style={styles.button}
         >
         <Text style={styles.buttonText}>Sign out</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+            onPress={handleEdit}
+            style={styles.button}
+        >
+        <Text style={styles.buttonText}>Edit profile</Text>
       </TouchableOpacity>
     </View>
     </SafeAreaView>

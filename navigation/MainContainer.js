@@ -11,6 +11,7 @@ import PortfolioScreen from './screens/Portfolio';
 import MarketScreen from './screens/Market'
 import ProfileScreen from './screens/Profile';
 import LoginScreen from './screens/Login';
+import EditProfileScreen from './screens/EditProfile';
 
 //screen names
 
@@ -19,6 +20,7 @@ const portfolioName = 'Portfolio';
 const marketName = 'Market';
 const profileName = 'Profile';
 const loginName = 'Login';
+const editProfileName = 'Settings';
 
 const Tab = createBottomTabNavigator();
 
@@ -44,8 +46,11 @@ export default function MainContainer() {
 
                             iconName = focused ? 'logo-bitcoin' : 'cash-outline'
                         } else if (rn == profileName) {
+                        
+                            iconName = focused ? 'person-circle-outline' : 'person-circle-outline'
+                        } else if (rn == editProfileName) {
 
-                            iconName = focused ? 'person-circle' : 'person-circle-outline'
+                            iconName = focused ? 'settings-outline' : 'settings-outline'
                         }
 
                         return <Ionicons name={iconName} size={30}/>
@@ -56,6 +61,7 @@ export default function MainContainer() {
                      <Tab.Screen name = {portfolioName} component ={PortfolioScreen}   />
                      <Tab.Screen name = {marketName} component ={MarketScreen}   />
                      <Tab.Screen name = {profileName} component ={ProfileScreen}   />
+                     <Tab.Screen name = {editProfileName} component ={EditProfileScreen}   />
 
 
             </Tab.Navigator>
