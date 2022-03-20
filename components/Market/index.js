@@ -1,39 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, FlatList, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, Image, FlatList, TouchableOpacity, TextInput,Button } from 'react-native';
 import styles from './styles'
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 
-
-
 // import .env tiedostosta api-avaimet ja muut, jotka ei kuulu githubiin
 import { COIN_API, SECRET_KEY } from "@env"
 
 
-
-
-
-
-
 export default function Market() {
 
-    const [asyncNumber, setAsyncNumber] = useState(100)
+    const [numberOfCoins, setnumberOfCoins] = useState(100)
     const [listData, setListData] = useState([])
-    //const [coinListData, setCoinListData] = useState([])
-
-
-
-
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(async () => {
-        var a = asyncNumber
+        var a = numberOfCoins
         try {
             const value = await AsyncStorage.getItem('@storage_Key')
             if (value !== null) {
                 console.log('value get', parseInt(value))
                 // value previously stored
-                setAsyncNumber(parseInt(value))
+                setnumberOfCoins(parseInt(value))
                 a = parseInt(value)
             }
         } catch (e) {
@@ -70,10 +59,6 @@ export default function Market() {
         <Text>            Rank: {rank}</Text>
     )
 
-
-    
-
-
     const renderItem = ({ item }) => (
         <TouchableOpacity>
             <View style={styles.item}>
@@ -95,41 +80,30 @@ export default function Market() {
                 </Text>
             </View>
         </TouchableOpacity>
-    )
-
-    
-
-        const searchName = (input) =>{
-            let data = listData;
-            let searchData = data.filter((item)=> {
-                return item.name.toLowerCase().includes(input.toLowerCase())
-            });
-            setListData(searchData)
-        }
-
- 
+    ) 
     return (
 
         <View style={styles.container}>
-            <TextInput style={styles.name} placeholder='Search for item' 
-            onChangeText={(input)=>{
-                searchName(input)
+            <TextInput  style={styles.name} placeholder='Search For Coins'
+              onChangeText={(input)=>{
+                setSearchTerm(input)
             }}
             ></TextInput>
-
-        
+            
 
             <FlatList
-                data={listData}
+                data={listData.filter((item)=>{
+                    if(searchTerm == ""){
+                        return(listData)
+
+                    }else if (item.name.toLowerCase().includes(searchTerm.toLowerCase())){
+                        return item
+                    }
+                })}
                 renderItem={renderItem}
                 keyExtractor={(item, i) => 'key' + i}
             />
-
-
-
         </View>
-
-
     );
 }
 
