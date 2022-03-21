@@ -36,12 +36,9 @@
     "react-native-screens": "~3.10.1",
     "react-native-vector-icons": "^9.1.0",
     "react-native-web": "0.17.1",
-<<<<<<< HEAD
     "react-navigation": "^4.4.4",
     "react-text-input": "^0.0.8"
-=======
     "react-native-svg": "12.1.1"
->>>>>>> HomeCoins
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
