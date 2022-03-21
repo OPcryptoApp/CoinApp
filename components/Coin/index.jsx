@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Image, FlatList } from 'react-native';
 import styles from './styles'
-
+import millify from 'millify';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
+import { SvgUri } from 'react-native-svg';
 
 // import .env tiedostosta api-avaimet ja muut, jotka ei kuulu githubiin
 import { COIN_API, SECRET_KEY } from "@env"
 
-// import 'dotenv/config'
-// require('dotenv').config()
+//import 'dotenv/config'
+//require('dotenv').config()
 
 
 const storeData = async (value) => {
@@ -39,8 +40,6 @@ export default function Coin() {
       // error reading value
     }
   }
-
-
 
   useEffect(async () => {
     var a = asyncNumber
@@ -87,27 +86,58 @@ export default function Coin() {
   console.log('listData', listData)
 
   const DataItem = ({ rank }) => (
-    <Text>            Rank: {rank}</Text>
-  )
+    <Text> Rank: {rank}</Text>
+  );
 
+  const PercentageColor = ({val}) => {
+    if (val < 0) {
+      return(
+      <Text
+        style={styles.changeNeg}>
+        {val}%
+      </Text>
+      )
+    } else {
+      return(
+      <Text
+        style={styles.changePosit}>
+        {val}%
+      </Text>
+      )
+    }
+  };
+
+  
   const renderItem = ({ item }) => (
+    
     <View style={styles.item}>
-      <Image
-        source={{ uri: item.iconUrl }}
+      
+      <View style={styles.flexRow}>
+        <SvgUri 
+        width="30"
+        height="30"
         style={styles.image}
-      />
+        uri={item.iconUrl}
+        />
+      <View style={{justifyContent:'center'}}>
       <Text
         style={styles.name}>
         {item.name}
       </Text>
-      <View style={styles.rank}>
-        <DataItem
-          rank={item.rank} />
+      <Text style={styles.sub}>{item.symbol}</Text>
       </View>
-      <Text
-        style={styles.change}>
-        {item.change}%
-      </Text>
+      <View  style={styles.left}>
+      </View>
+      <View style={styles.left}>
+      <View style={styles.left}>
+        <Text style={styles.price}> ${millify(item.price)}</Text>  
+      </View>
+      <PercentageColor 
+        val={item.change}
+        />
+      </View>
+      </View>
+      
     </View>
   )
 
@@ -119,7 +149,10 @@ export default function Coin() {
         data={listData}
         renderItem={renderItem}
         keyExtractor={(item, i) => 'key' + i}
+        
       />
+     
+     
 
       {/*  <Image 
                     source={{
