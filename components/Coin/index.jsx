@@ -41,8 +41,6 @@ export default function Coin() {
     }
   }
 
-
-
   useEffect(async () => {
     var a = asyncNumber
     console.log(process.env)
@@ -121,10 +119,6 @@ export default function Coin() {
         style={styles.image}
         uri={item.iconUrl}
         />
-      {/*<Image
-        source={{ uri: item.iconUrl }}
-        style={styles.image}
-      />*/}
       <View style={{justifyContent:'center'}}>
       <Text
         style={styles.name}>
@@ -132,19 +126,15 @@ export default function Coin() {
       </Text>
       <Text style={styles.sub}>{item.symbol}</Text>
       </View>
+      <View  style={styles.left}>
+      </View>
       <View style={styles.left}>
       <View style={styles.left}>
-        <Text style={styles.price}> ${millify(item.price)}</Text>
-       
+        <Text style={styles.price}> ${millify(item.price)}</Text>  
       </View>
       <PercentageColor 
         val={item.change}
         />
-
-      {/*<Text
-        style={styles.change}>
-        {item.change}%
-    </Text>*/}
       </View>
       </View>
       
