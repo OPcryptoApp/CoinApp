@@ -14,7 +14,7 @@ export default function HomeScreen({ navigation }) {
 
       </View>
       <View>
-        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20, marginBottom: 5 }}> Coins </Text>
+        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20, marginBottom: 55, marginLeft: 15 }}> Coins </Text>
 
         {/* <Text
                 onPress={() => alert('This is the "Home" screen.')}
