@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, FlatList, TouchableOpacity, TextInput,Button } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, TextInput } from 'react-native';
+import { SvgUri } from 'react-native-svg';
 import styles from './styles'
+import millify from 'millify';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
@@ -59,44 +61,87 @@ export default function Market() {
         <Text>            Rank: {rank}</Text>
     )
 
+
+
+    const PercentageColor = ({ val }) => {
+        if (val < 0) {
+            return (
+                <Text
+                    style={styles.changeNeg}>
+                    {val}%
+                </Text>
+            )
+        } else {
+            return (
+                <Text
+                    style={styles.changePosit}>
+                    {val}%
+                </Text>
+            )
+        }
+    };
+
+
     const renderItem = ({ item }) => (
         <TouchableOpacity>
+
+
             <View style={styles.item}>
-                <Image
-                    source={{ uri: item.iconUrl }}
-                    style={styles.image}
-                />
-                <Text
-                    style={styles.name}>
-                    {item.name}
-                </Text>
-                <View style={styles.rank}>
-                    <DataItem
-                        rank={item.rank} />
+
+                <View style={styles.flexRow}>
+
+
+
+                    {/* SVG huutaa error, selvitän later
+                    //TypeError: null is not an object (evaluating 'children.push')
+                    // This error is located at: in SvgXml (created by SvgUri)
+
+                    <SvgUri
+                        width="30"
+                        height="30"
+                        style={styles.image}
+                        uri={item.iconUrl}
+                    />
+                 */}
+
+                    <View style={{ justifyContent: 'center' }}>
+                        <Text
+                            style={styles.name}>
+                            {item.name}
+                        </Text>
+                        <Text style={styles.sub}>{item.symbol}</Text>
+                    </View>
+                    <View style={styles.left}>
+                    </View>
+                    <View style={styles.left}>
+                        <View style={styles.left}>
+                            <Text style={styles.price}> ${millify(item.price)}</Text>
+                        </View>
+                        <PercentageColor
+                            val={item.change}
+                        />
+                    </View>
                 </View>
-                <Text
-                    style={styles.change}>
-                    {item.change}%
-                </Text>
+
             </View>
         </TouchableOpacity>
-    ) 
+    )
     return (
 
         <View style={styles.container}>
-            <TextInput  style={styles.name} placeholder='Search For Coins'
-              onChangeText={(input)=>{
-                setSearchTerm(input)
-            }}
+            <TextInput style={styles.placeholder} placeholderTextColor='white' placeholder='Search For Coins...'
+                onChangeText={(input) => {
+                    setSearchTerm(input)
+                }}
             ></TextInput>
-            
+
 
             <FlatList
-                data={listData.filter((item)=>{
-                    if(searchTerm == ""){
-                        return(listData)
+                data={listData.filter((item) => {
+                    if (searchTerm == "") {
+                        return (listData)
 
-                    }else if (item.name.toLowerCase().includes(searchTerm.toLowerCase())){
+                    } else if (item.name.toLowerCase().includes(searchTerm.toLowerCase())) {
                         return item
                     }
                 })}
