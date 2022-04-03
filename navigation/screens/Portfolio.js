@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button } from 'react-native';
-import PortfolioWindow from '../../components/PortfolioWindow';
+import PortfolioWindow from '../../components/Portfolio/PortfolioWindow';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const storePfData = async (value) => {

@@ -66,7 +66,7 @@ export default function Coin() {
         tiers: '1',
         orderBy: 'marketCap',
         orderDirection: 'desc',
-        limit: a,
+        limit: '4',
         offset: '0'
       },
       headers: {
@@ -89,55 +89,55 @@ export default function Coin() {
     <Text> Rank: {rank}</Text>
   );
 
-  const PercentageColor = ({val}) => {
+  const PercentageColor = ({ val }) => {
     if (val < 0) {
-      return(
-      <Text
-        style={styles.changeNeg}>
-        {val}%
-      </Text>
+      return (
+        <Text
+          style={styles.changeNeg}>
+          {val}%
+        </Text>
       )
     } else {
-      return(
-      <Text
-        style={styles.changePosit}>
-        {val}%
-      </Text>
+      return (
+        <Text
+          style={styles.changePosit}>
+          {val}%
+        </Text>
       )
     }
   };
 
-  
+
   const renderItem = ({ item }) => (
-    
+
     <View style={styles.item}>
-      
+
       <View style={styles.flexRow}>
-        <SvgUri 
-        width="30"
-        height="30"
-        style={styles.image}
-        uri={item.iconUrl}
+        <SvgUri
+          width="30"
+          height="30"
+          style={styles.image}
+          uri={item.iconUrl}
         />
-      <View style={{justifyContent:'center'}}>
-      <Text
-        style={styles.name}>
-        {item.name}
-      </Text>
-      <Text style={styles.sub}>{item.symbol}</Text>
+        <View style={{ justifyContent: 'center' }}>
+          <Text
+            style={styles.name}>
+            {item.name}
+          </Text>
+          <Text style={styles.sub}>{item.symbol}</Text>
+        </View>
+        <View style={styles.left}>
+        </View>
+        <View style={styles.left}>
+          <View style={styles.left}>
+            <Text style={styles.price}> ${millify(item.price)}</Text>
+          </View>
+          <PercentageColor
+            val={item.change}
+          />
+        </View>
       </View>
-      <View  style={styles.left}>
-      </View>
-      <View style={styles.left}>
-      <View style={styles.left}>
-        <Text style={styles.price}> ${millify(item.price)}</Text>  
-      </View>
-      <PercentageColor 
-        val={item.change}
-        />
-      </View>
-      </View>
-      
+
     </View>
   )
 
@@ -149,10 +149,10 @@ export default function Coin() {
         data={listData}
         renderItem={renderItem}
         keyExtractor={(item, i) => 'key' + i}
-        
+
       />
-     
-     
+
+
 
       {/*  <Image 
                     source={{
