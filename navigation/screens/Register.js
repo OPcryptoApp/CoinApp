@@ -2,9 +2,9 @@ import React, { useState } from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import { auth } from '../../firebase';
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
-export default function LoginScreen() {
+export default function RegisterScreen() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -12,20 +12,20 @@ export default function LoginScreen() {
 
   const navigation = useNavigation();
 
-  const handleLogin = () => {
-    signInWithEmailAndPassword(auth, email, password)
+  const handleSignUp = () => {
+    createUserWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         console.log(userCredentials);
         setIsSignedIn(true);
         navigation.navigate("Home");
       })
       .catch((error) => {
-        alert("Error");
+        alert("Account already exists");
       });
   }
 
-  const registerButton = () => {
-    navigation.navigate("Register");
+  const goBack = () => {
+    navigation.navigate("Login");
   }
 
   return (
@@ -51,16 +51,16 @@ export default function LoginScreen() {
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          onPress={handleLogin}
+          onPress={handleSignUp}
           style={styles.button}
         >
-          <Text style={styles.buttonText}>Login</Text>
+          <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={registerButton}
+          onPress={goBack}
           style={[styles.button, styles.buttonOutline]}
         >
-          <Text style={styles.buttonOutlineText}>Register</Text>
+          <Text style={styles.buttonOutlineText}>Back</Text>
         </TouchableOpacity>
       </View>
     </KeyboardAvoidingView>
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: '20%',
+    paddingTop: '25%',
   },
   inputContainer: {
     width: '80%'
