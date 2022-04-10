@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import Market from '../../components/Market';
 
 
-export default function MarketScreen({ navigation }) {
+export default function MarketScreen() {
     return (
         <View style={styles.container}>
             <View>
@@ -22,10 +22,10 @@ export default function MarketScreen({ navigation }) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,       
+        flex: 1,
         marginBottom: 10,
         backgroundColor: '#0C2432',
-        paddingTop: 10, 
+        paddingTop: 10,
     },
     item: {
         backgroundColor: 'gray',
@@ -58,9 +58,9 @@ const styles = StyleSheet.create({
     title: {
         fontWeight: 'bold',
         color: 'white',
-        fontSize:20,
+        fontSize: 20,
         marginLeft: 'auto',
-        marginRight:'auto',
+        marginRight: 'auto',
         marginBottom: 5
     }
 });
