@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import {
-    View,
-    Text,
-    TouchableOpacity,
-    ImageBackground,
-    TextInput,
-    StyleSheet,
-    Alert,
-  } from 'react-native';
+  View,
+  Text,
+  TouchableOpacity,
+  ImageBackground,
+  TextInput,
+  StyleSheet,
+  Alert,
+} from 'react-native';
 import { initializeApp } from "firebase/app";
 import { FB_KEY } from "@env"
 //import Profile from './Profile';
-import { getFirestore, getDoc, setDoc, addDoc, collection, updateDoc, doc  } from 'firebase/firestore';
+import { getFirestore, getDoc, setDoc, addDoc, collection, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { name, username, bio, email, num } from './Profile';
 
@@ -23,34 +23,33 @@ export default function EditProfileScreen() {
   const [bio, setBio] = useState('')
   const [num, setNum] = useState('');
   const [email, setEmail] = useState('');
-  
+
 
   // hakee datan kirjautuneen käyttäjätunnuksen id mukaan, sama kuin profile.js:ssä
   const getUserData = async () => {
-  const docRef = doc(db, 'users', 'XKudDwdMapNFtqBtJH46') ; //myohemmin dokumentin tilalle: auth.currentUser.uid
-  const docSnap = await getDoc(docRef);
+    const docRef = doc(db, 'users', 'XKudDwdMapNFtqBtJH46'); //myohemmin dokumentin tilalle: auth.currentUser.uid
+    const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-        setName(docSnap.data().name);
-        setUsername(docSnap.data().username);
-        setBio(docSnap.data().bio);
-        setNum(docSnap.data().num);
-        setEmail(docSnap.data().email);
+      setName(docSnap.data().name);
+      setUsername(docSnap.data().username);
+      setBio(docSnap.data().bio);
+      setNum(docSnap.data().num);
+      setEmail(docSnap.data().email);
     } else {
-        console.log('No data found');
+      console.log('No data found');
     }
-}
+  }
 
   useEffect(() => {
     getUserData()
   }, [])
-  
 
-  
+
   //lisää uuden datan (dokumentin) firestoreen jos ei ole olemassa
   //muuten päivittää / overwrite kaikki {} sisällä olevat parametrit
-  
-    const saveDoc = () => {
+
+  const saveDoc = () => {
     const docRef = setDoc(doc(db, 'users', 'XKudDwdMapNFtqBtJH46'), {
       name: name,
       username: username,
@@ -62,10 +61,7 @@ export default function EditProfileScreen() {
     Alert.alert("Alert", "Profile has been updated");
   }
 
-
-
-
-    return (
+  return (
 
 
     <View style={styles.container}>
@@ -168,7 +164,7 @@ export default function EditProfileScreen() {
           />
           </View>*/}
         <TouchableOpacity style={styles.commandButton} onPress={saveDoc}>
-            <Text>Save</Text>
+          <Text>Save</Text>
         </TouchableOpacity>
       </View>
     </View>

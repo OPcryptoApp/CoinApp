@@ -12,11 +12,6 @@ import { useRoute } from '@react-navigation/native';
 import { SvgUri } from 'react-native-svg';
 import { Button } from 'react-native-paper';
 import millify from 'millify';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-
-
-
-
 
 
 
@@ -24,7 +19,6 @@ export default function CoinPageScreen() {
   const route = useRoute();
   const [favorite, setFavorite] = useState(false);
   const [coin, setCoin] = useState(null);
-  const [coinData, setCoinData] = useState({});
   let [fetchedCoinData, setFetchedCoinData] = useState(null);
 
   const [iconName, setIconName] = useState('md-star-outline');
@@ -57,17 +51,6 @@ export default function CoinPageScreen() {
     fetchCoinData();
   }, []);
 
-
-  {/* kliinimpi ja toimii mutta varoittaa : [Unhandled promise rejection: TypeError: undefined is not an object (evaluating 'coinData.data.coin')]
-  useEffect(() => {
-    getSingleCoinData(coinId).then(data => {
-      setCoinData(data);
-      console.log('coin toimiiko ' + coinData.data.coin.name);
-      setName(coinData.data.coin.name);
-    });
-  }, [coinId]);
-  */}
-
   const PercentageColor = ({ val }) => {
     if (val < 0) {
       return (
@@ -98,21 +81,10 @@ export default function CoinPageScreen() {
   };
 
 
-
-
-
-
   return (
 
     <View style={styles.container}>
-
-
-
       <Ionicons style={styles.favorite} onPress={handleFavorite} name={iconName} size={30} />
-
-
-
-
       <Text style={styles.itemTitle}>{symbol} </Text>
 
       <SvgUri
@@ -129,15 +101,10 @@ export default function CoinPageScreen() {
         <PercentageColor
           val={change}
         />
-
       </View>
       <View style={styles.textField}>
         <Text style={styles.normalText}> tähän hintakäyrä </Text>
-
-
       </View>
-
-
 
       <View style={styles.buttonContainer}>
 
@@ -165,14 +132,7 @@ export default function CoinPageScreen() {
     </View>
 
   );
-
-
-
-
-
 }
-
-
 
 
 const styles = StyleSheet.create({
@@ -207,7 +167,6 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   normalText: {
-
     fontSize: 15,
     width: 250,
     paddingBottom: 20
@@ -283,7 +242,4 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     fontSize: 30,
   },
-
-
-
 });
