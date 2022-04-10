@@ -1,0 +1,26 @@
+COIN_API = eaf0ed35e2mshfe8eb54144dbd4cp109fbejsna23b8b15bb22
+
+SECRET_KEY = ReeRaaRee
+
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import * as firebase from "firebase";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyDhXLn6g2yuywzmPSGheL8xLArl0CS_1nM",
+  authDomain: "kryptoapp-aa387.firebaseapp.com",
+  projectId: "kryptoapp-aa387",
+  storageBucket: "kryptoapp-aa387.appspot.com",
+  messagingSenderId: "526793926573",
+  appId: "1:526793926573:web:d7129779914325444b2324"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig)
+
+const auth = firebase.auth()
+
+export { auth };
