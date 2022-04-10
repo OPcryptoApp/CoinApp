@@ -3,6 +3,11 @@ import { View, Text, FlatList, TouchableOpacity, TextInput } from 'react-native'
 import { SvgUri } from 'react-native-svg';
 import styles from './styles'
 import millify from 'millify';
+import { useNavigation } from "@react-navigation/native";
+
+
+
+
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
@@ -12,6 +17,10 @@ import { COIN_API, SECRET_KEY } from "@env"
 
 
 export default function Market() {
+
+    const navigation = useNavigation();
+
+
 
     const [numberOfCoins, setnumberOfCoins] = useState(100)
     const [listData, setListData] = useState([])
@@ -57,6 +66,8 @@ export default function Market() {
 
     }, [])
 
+
+
     const DataItem = ({ rank }) => (
         <Text>            Rank: {rank}</Text>
     )
@@ -83,7 +94,9 @@ export default function Market() {
 
 
     const renderItem = ({ item }) => (
-        <TouchableOpacity>
+
+
+        < TouchableOpacity onPress={() => { navigation.navigate('CoinPageScreen', { coinId: item.uuid }) }}>
 
 
             <View style={styles.item}>
@@ -92,7 +105,7 @@ export default function Market() {
 
 
 
-                    {/* SVG huutaa error, selvitän later
+                    {/* SVG huutaa error
                     //TypeError: null is not an object (evaluating 'children.push')
                     // This error is located at: in SvgXml (created by SvgUri)
 
@@ -124,7 +137,7 @@ export default function Market() {
                 </View>
 
             </View>
-        </TouchableOpacity>
+        </TouchableOpacity >
     )
     return (
 
@@ -141,7 +154,8 @@ export default function Market() {
                     if (searchTerm == "") {
                         return (listData)
 
-                    } else if (item.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+                    } else if (item.name.toLowerCase().includes(searchTerm.toLowerCase() || item.symbol.toLowerCase().includes(searchTerm.toLowerCase()))) {
+                        console.log(item.symbol)
                         return item
                     }
                 })}
@@ -149,6 +163,8 @@ export default function Market() {
                 keyExtractor={(item, i) => 'key' + i}
             />
         </View>
+
+
     );
 }
 

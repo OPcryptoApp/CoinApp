@@ -24,47 +24,44 @@ const editProfileName = 'Settings';
 
 const Tab = createBottomTabNavigator();
 
-
-
 export default function MainContainer() {
 
     return (
-        <NavigationContainer>
-            <Tab.Navigator initialRouteName={loginName}
-                screenOptions={({ route }) => ({
-                    tabBarIcon: ({ focused, color, size }) => {
-                        let iconName;
-                        let rn = route.name;
 
-                        if (rn === homeName) {
+        <Tab.Navigator initialRouteName={loginName}
+            screenOptions={({ route }) => ({
+                tabBarIcon: ({ focused, color, size }) => {
+                    let iconName;
+                    let rn = route.name;
 
-                            iconName = focused ? 'home' : 'home-outline'
-                        } else if (rn == portfolioName) {
+                    if (rn === homeName) {
 
-                            iconName = focused ? 'bar-chart' : 'bar-chart-outline'
-                        } else if (rn == marketName) {
+                        iconName = focused ? 'home' : 'home-outline'
+                    } else if (rn == portfolioName) {
 
-                            iconName = focused ? 'logo-bitcoin' : 'cash-outline'
-                        } else if (rn == profileName) {
-                        
-                            iconName = focused ? 'person-circle-outline' : 'person-circle-outline'
-                        } else if (rn == editProfileName) {
+                        iconName = focused ? 'bar-chart' : 'bar-chart-outline'
+                    } else if (rn == marketName) {
 
-                            iconName = focused ? 'settings-outline' : 'settings-outline'
-                        }
+                        iconName = focused ? 'logo-bitcoin' : 'cash-outline'
+                    } else if (rn == profileName) {
 
-                        return <Ionicons name={iconName} size={30}/>
-                    },
-                })}>
-                     <Tab.Screen options={{tabBarStyle: {display: "none"}, tabBarButton: (props) => null, }} name = {loginName} component ={LoginScreen}   />
-                     <Tab.Screen name = {homeName} component ={HomeScreen}   />
-                     <Tab.Screen name = {portfolioName} component ={PortfolioScreen}   />
-                     <Tab.Screen name = {marketName} component ={MarketScreen}   />
-                     <Tab.Screen name = {profileName} component ={ProfileScreen}   />
-                     <Tab.Screen name = {editProfileName} component ={EditProfileScreen}   />
+                        iconName = focused ? 'person-circle-outline' : 'person-circle-outline'
+                    } else if (rn == editProfileName) {
+
+                        iconName = focused ? 'settings-outline' : 'settings-outline'
+                    }
+
+                    return <Ionicons name={iconName} size={30} />
+                },
+            })}>
+            <Tab.Screen options={{ tabBarStyle: { display: "none" }, tabBarButton: (props) => null, }} name={loginName} component={LoginScreen} />
+            <Tab.Screen name={homeName} component={HomeScreen} />
+            <Tab.Screen name={portfolioName} component={PortfolioScreen} />
+            <Tab.Screen name={marketName} component={MarketScreen} />
+            <Tab.Screen name={profileName} component={ProfileScreen} />
+            <Tab.Screen name={editProfileName} component={EditProfileScreen} />
+        </Tab.Navigator>
 
 
-            </Tab.Navigator>
-        </NavigationContainer>
     )
 }
