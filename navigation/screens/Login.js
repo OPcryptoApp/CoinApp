@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/core';
 import { auth } from '../../firebase';
@@ -14,8 +14,8 @@ export default function LoginScreen() {
 
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
-      .then((re) => {
-        console.log(re);
+      .then((userCredentials) => {
+        console.log(userCredentials);
         setIsSignedIn(true);
         navigation.navigate("Home");
       })
