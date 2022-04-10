@@ -26,12 +26,10 @@ const editProfileName = 'Settings';
 
 const Tab = createBottomTabNavigator();
 
-
-
 export default function MainContainer() {
 
     return (
-        <NavigationContainer>
+
             <Tab.Navigator initialRouteName={loginName}
                 screenOptions={({ route }) => ({
                     tabBarIcon: ({ focused, color, size }) => {
@@ -68,6 +66,6 @@ export default function MainContainer() {
 
 
             </Tab.Navigator>
-        </NavigationContainer>
+
     )
 }
