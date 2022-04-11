@@ -14,6 +14,7 @@ import { auth } from "../../firebase";
 import { signOut } from "firebase/auth";
 
 
+
 export default function ProfileScreen({ navigation }) {
 
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -76,11 +77,13 @@ export default function ProfileScreen({ navigation }) {
             <Title style={[styles.title, {
               marginTop: 15,
               marginBottom: 5,
+
             }]}>{name}</Title>
             <Caption style={styles.caption}>@{username}</Caption>
           </View>
 
         </View>
+      </View>
 
         <View style={styles.userInfoSection}>
           <View style={styles.row}>
@@ -116,8 +119,11 @@ export default function ProfileScreen({ navigation }) {
           </View>
         </View>
       </View>
+
     </SafeAreaView>
 
 
   );
+
 }
+

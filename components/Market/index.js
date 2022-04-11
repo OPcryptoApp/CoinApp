@@ -18,6 +18,7 @@ import { COIN_API, SECRET_KEY } from "@env"
 
 export default function Market() {
 
+
     const navigation = useNavigation();
 
 
@@ -161,7 +162,9 @@ export default function Market() {
                 })}
                 renderItem={renderItem}
                 keyExtractor={(item, i) => 'key' + i}
+
             />
+          </View>
         </View>
 
 

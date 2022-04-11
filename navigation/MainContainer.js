@@ -2,6 +2,7 @@ import * as React from 'react';
 
 
 import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -23,6 +24,7 @@ const profileName = 'Profile';
 const loginName = 'Login';
 const registerName = 'Register';
 const editProfileName = 'Settings';
+const profileSettings = 'Settings';
 
 const Tab = createBottomTabNavigator();
 
