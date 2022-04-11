@@ -5,7 +5,7 @@ import MainContainer from "./MainContainer";
 
 
 import CoinPageScreen from './screens/CoinPage';
-
+import EditProfileScreen from './screens/EditProfile';
 
 const Stack = createNativeStackNavigator();
 
@@ -24,6 +24,14 @@ const Navigation = () => {
         component={CoinPageScreen}
         options={{ headerShown: false }}
       />
+
+
+      <Stack.Screen
+        name="EditProfileScreen"
+        component={EditProfileScreen}
+        options={{ headerShown: false }}
+      />
+
     </Stack.Navigator>
   );
 };
