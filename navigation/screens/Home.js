@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, Text, Button } from 'react-native';
-import PortfolioWindow from '../../components/PortfolioWindow';
-import Coin from '../../components/Coin';
+import PortfolioWindow from '../../components/Portfolio/PortfolioWindow';
+import Coin from '../../components/Home/coin';
 
 export default function HomeScreen({ navigation }) {
 
@@ -16,9 +16,6 @@ export default function HomeScreen({ navigation }) {
       <View>
         <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20, marginBottom: 55, marginLeft: 15 }}> Coins </Text>
 
-        {/* <Text
-                onPress={() => alert('This is the "Home" screen.')}
-           style={{ fontSize: 26, fontWeight: 'bold' }}>Home Screen</Text> */}
       </View>
       <Coin />
     </View>

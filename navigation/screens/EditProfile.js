@@ -14,9 +14,10 @@ import { FB_KEY } from "@env"
 import { getFirestore, getDoc, setDoc, addDoc, collection, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase';
 import { name, username, bio, email, num } from './Profile';
+import { StackActions } from '@react-navigation/native';
 
 
-export default function EditProfileScreen() {
+export default function EditProfileScreen({ navigation }) {
 
   const [name, setName] = useState('');
   const [username, setUsername] = useState('');
@@ -24,6 +25,11 @@ export default function EditProfileScreen() {
   const [num, setNum] = useState('');
   const [email, setEmail] = useState('');
 
+  const popAction = StackActions.pop(1);
+
+  const handlePop = () => {
+    navigation.dispatch(popAction);
+  }
 
   // hakee datan kirjautuneen käyttäjätunnuksen id mukaan, sama kuin profile.js:ssä
   const getUserData = async () => {
@@ -62,7 +68,6 @@ export default function EditProfileScreen() {
   }
 
   return (
-
 
     <View style={styles.container}>
       <View style={{ margin: 20 }}>
@@ -166,6 +171,11 @@ export default function EditProfileScreen() {
         <TouchableOpacity style={styles.commandButton} onPress={saveDoc}>
           <Text>Save</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style={styles.commandButton} onPress={handlePop}>
+          <Text>Cancel</Text>
+        </TouchableOpacity>
+
       </View>
     </View>
   );
@@ -179,7 +189,7 @@ const styles = StyleSheet.create({
   commandButton: {
     padding: 15,
     borderRadius: 10,
-    backgroundColor: '#00FF00',
+    backgroundColor: '#009688',
     alignItems: 'center',
     marginTop: 10,
   },
