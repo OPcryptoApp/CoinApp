@@ -2,6 +2,7 @@ import * as React from 'react';
 import { View, Text, Button } from 'react-native';
 import PortfolioWindow from '../../components/Portfolio/PortfolioWindow';
 import Coin from '../../components/Home/coin';
+import PortfolioChart from '../../components/Graph/PortfolioChart';
 
 export default function HomeScreen({ navigation }) {
 

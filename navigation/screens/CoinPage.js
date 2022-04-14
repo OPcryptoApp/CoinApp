@@ -12,6 +12,7 @@ import { useRoute } from '@react-navigation/native';
 import { SvgUri } from 'react-native-svg';
 import { Button } from 'react-native-paper';
 import millify from 'millify';
+import Chart from '../../components/Graph/Chart';
 
 
 
@@ -102,8 +103,8 @@ export default function CoinPageScreen() {
           val={change}
         />
       </View>
-      <View style={styles.textField}>
-        <Text style={styles.normalText}> tähän hintakäyrä </Text>
+      <View>
+        <Chart></Chart>
       </View>
 
       <View style={styles.buttonContainer}>

@@ -4,6 +4,7 @@ import { SvgUri } from 'react-native-svg';
 import styles from './styles'
 import millify from 'millify';
 import { useNavigation } from "@react-navigation/native";
+import Chart from '../Graph/Chart';
 
 
 

@@ -5,9 +5,13 @@ import millify from 'millify';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import { SvgUri } from 'react-native-svg';
+import { TouchableOpacity } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
+import Chart from '../Graph/Chart';
 
 // import .env tiedostosta api-avaimet ja muut, jotka ei kuulu githubiin
 import { COIN_API, SECRET_KEY } from "@env"
+import { Button } from 'react-native-paper';
 
 //import 'dotenv/config'
 //require('dotenv').config()
@@ -107,9 +111,12 @@ export default function Coin() {
     }
   };
 
+  const navigation = useNavigation();
+
 
   const renderItem = ({ item }) => (
 
+    < TouchableOpacity onPress={() => { navigation.navigate('CoinPageScreen', { coinId: item.uuid }) }}>
     <View style={styles.item}>
 
       <View style={styles.flexRow}>
@@ -139,19 +146,19 @@ export default function Coin() {
       </View>
 
     </View>
+  </TouchableOpacity>
   )
 
   return (
 
     <View style={styles.container}>
-
+      
       <FlatList
         data={listData}
         renderItem={renderItem}
         keyExtractor={(item, i) => 'key' + i}
-
       />
-
+      
 
 
       {/*  <Image 
