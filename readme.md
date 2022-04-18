@@ -1,7 +1,12 @@
-Ohjelmistoprojekti 2 -kurssin projekti github-sivu
+# KryptoApp
 
-`npm install`
+### Seuraa omia sijoituksia* mobiilisovelluksella
 
-`expo install`
+Voit sijoittaa* kryptokolikkoihin ja seurata oman portfolion todennäköistä laskua tämän sovelluksen kautta.
 
-Fetching and displaying cryptocoins from API to homepage in app
+*ei oikeaa valuttaa käytössä
+
+___
+
+Ohjelmistoprojekti 2 -kurssin krypto-ryhmän projektin github-sivu
+
