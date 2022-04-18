@@ -45,6 +45,8 @@ export default function CoinPageScreen() {
     setImage(fetchedCoinData.data.coin.iconUrl);
     setChange(fetchedCoinData.data.coin.change);
     setName(fetchedCoinData.data.coin.name);
+    console.log('fetchedCoinData.data.coin.name', fetchedCoinData.data.coin.name)
+    console.log('name', name)
   };
 
 
@@ -104,7 +106,7 @@ export default function CoinPageScreen() {
         />
       </View>
       <View>
-        <Chart coinName={name}></Chart>
+        <Chart name={name}></Chart>
       </View>
 
       <View style={styles.buttonContainer}>

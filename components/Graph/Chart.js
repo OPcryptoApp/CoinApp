@@ -3,11 +3,13 @@ import axios from 'axios';
 import { VictoryLine, VictoryChart, VictoryAxis, VictoryLabel } from "victory-native"
 import React, { useState, useEffect } from 'react';
 
-export default function Chart({ name }) {
+export default function Chart(props) {
+
+  const { name } = props.name
 
   const [data, setData] = useState()
-  const [coin, setCoin] = useState("bitcoin")
-  const [period, setPeriod] = useState(30)
+  const [coin, setCoin] = useState("bitcoin") // Toimii tällä, mutta pitää saada toimaan propseista saadulla nimelle
+  const [period, setPeriod] = useState(30) // Ongelmana on hakujen järjestys. Tässä haetaan ennenkuin on saatu propseilta tiedot.
 
   useEffect(
     () => {
@@ -18,7 +20,8 @@ export default function Chart({ name }) {
 
   async function getData() {
     try {
-      const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${name}/market_chart?vs_currency=usd&days=${period}`)
+      console.log('name', name)
+      const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${coin}/market_chart?vs_currency=usd&days=${period}`)
       const formatData = response.data.prices.map(function (i) {
         return {
           x: i[0],
