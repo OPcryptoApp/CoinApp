@@ -113,7 +113,6 @@ export default function Coin() {
 
   const navigation = useNavigation();
 
-
   const renderItem = ({ item }) => (
 
     < TouchableOpacity onPress={() => { navigation.navigate('CoinPageScreen', { coinId: item.uuid }) }}>

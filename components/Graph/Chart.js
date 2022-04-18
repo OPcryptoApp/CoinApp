@@ -1,26 +1,24 @@
 import { StyleSheet, Text, View } from 'react-native';
 import axios from 'axios';
-import { VictoryLine, VictoryChart, VictoryAxis } from "victory-native"
+import { VictoryLine, VictoryChart, VictoryAxis, VictoryLabel } from "victory-native"
 import React, { useState, useEffect } from 'react';
-
-//TOISTAISEKSI NÄYTTÄÄ VAIN BITCOININ ARVOKÄYRÄN
 
 export default function Chart() {
   
   const [data, setData] = useState()
-  const [selectedCoin, setSelectedCoin] = useState('')
+  const [coin, setCoin] = useState("bitcoin")
   const [period, setPeriod] = useState(30)
 
   useEffect(
 		() => {
 			getData()
 		},
-		[ selectedCoin, period ]
+		[ coin, period ]
 	)
 
   async function getData() {
     try {
-      const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${selectedCoin}/market_chart?vs_currency=usd&days=${period}`)
+      const response = await axios.get(`https://api.coingecko.com/api/v3/coins/${coin}/market_chart?vs_currency=usd&days=${period}`)
       const formatData = response.data.prices.map(function(i) {
         return {
           x: i[0],
@@ -36,18 +34,34 @@ export default function Chart() {
 
   return(
     <View>
-      <VictoryLine
-				style={{
-					data: {
-						stroke: "#FFFFFF",
-						strokeWidth: 1
-            
-					}
-				}}
-				width={450}
-				height={200}
-				data={data}
-			/>
+			<VictoryChart>
+			<VictoryAxis
+    dependentAxis
+    tickFormat={(y) => y}
+    style={{
+      axis: {
+        stroke: '#0C2432'
+      },
+      tickLabels: {
+        fill: 'white'
+      },
+      
+   			 }}
+ 			 />
+		
+				<VictoryLine
+					style={{
+						data: {
+							stroke: "#FFFFFF",
+							strokeWidth: 1
+							
+						}
+					}}
+					width={450}
+					height={200}
+					data={data}
+				/>
+			</VictoryChart>
 
     <View style={styles.timeWrapper}>
 				<Text style={[ styles.baseText, period === 1 ? styles.underline : null ]} onPress={() => setPeriod(1)}>
