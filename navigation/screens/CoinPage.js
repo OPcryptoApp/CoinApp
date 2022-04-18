@@ -104,7 +104,7 @@ export default function CoinPageScreen() {
         />
       </View>
       <View>
-        <Chart></Chart>
+        <Chart coinName={name}></Chart>
       </View>
 
       <View style={styles.buttonContainer}>
