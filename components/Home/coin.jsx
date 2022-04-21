@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, FlatList } from 'react-native';
 import styles from './styles'
 import millify from 'millify';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from "axios";
+/* import AsyncStorage from '@react-native-async-storage/async-storage';
+ */import axios from "axios";
 import { SvgUri } from 'react-native-svg';
 
 // import .env tiedostosta api-avaimet ja muut, jotka ei kuulu githubiin
@@ -24,28 +24,28 @@ const storeData = async (value) => {
 
 export default function Coin() {
 
-  const [asyncNumber, setAsyncNumber] = useState(5)
+  /* const [asyncNumber, setAsyncNumber] = useState(5) */
   const [listData, setListData] = useState([])
   //const [coinListData, setCoinListData] = useState([])
 
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('@storage_Key')
-      if (value !== null) {
-        console.log('value get', parseInt(value))
-        // value previously stored
-        setAsyncNumber(parseInt(value))
+  /*   const getData = async () => {
+      try {
+        const value = await AsyncStorage.getItem('@storage_Key')
+        if (value !== null) {
+          console.log('value get', parseInt(value))
+          // value previously stored
+          setAsyncNumber(parseInt(value))
+        }
+      } catch (e) {
+        // error reading value
       }
-    } catch (e) {
-      // error reading value
-    }
-  }
+    } */
 
   useEffect(async () => {
-    var a = asyncNumber
+    /* var a = asyncNumber */
     console.log(process.env)
     console.log("response data", COIN_API);
-    try {
+    /* try {
       const value = await AsyncStorage.getItem('@storage_Key')
       if (value !== null) {
         console.log('value get', parseInt(value))
@@ -55,7 +55,7 @@ export default function Coin() {
       }
     } catch (e) {
       // error reading value
-    }
+    } */
 
     axios.request({
       method: 'GET',

@@ -13,9 +13,16 @@ import { FB_KEY } from "@env"
 //import Profile from './Profile';
 import { getFirestore, getDoc, setDoc, addDoc, collection, updateDoc, doc } from 'firebase/firestore';
 import { db } from '../../firebase';
-import { name, username, bio, email, num } from './Profile';
+//import { name, username, bio, email, num } from './Profile';
 import { StackActions } from '@react-navigation/native';
 
+// TIMER ERROR 
+// 
+// voidaan jättää huomioimatta.
+// https://stackoverflow.com/questions/44603362/setting-a-timer-for-a-long-period-of-time-i-e-multiple-minutes
+// https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-485410026
+//
+// Ongelma node_modulessa, joka asentuu aina uudestaan, ku tekee uuden 'npm install'
 
 export default function EditProfileScreen({ navigation }) {
 

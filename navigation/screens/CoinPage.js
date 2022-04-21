@@ -13,6 +13,8 @@ import { SvgUri } from 'react-native-svg';
 import { Button } from 'react-native-paper';
 import millify from 'millify';
 
+import coinService from '../../services/coinService';
+
 
 
 export default function CoinPageScreen() {
@@ -71,10 +73,11 @@ export default function CoinPageScreen() {
 
   const handleFavorite = () => {
     if (favorite === false) {
-      setIconName('md-star-outline');
+      coinService.setCoinAsFavorite(coin)
+      setIconName('md-star-outline'); // Favorite Icon should be tied to user data from firestore
     } else {
-      setIconName('md-star');
-
+      coinService.setCoinAsFavorite(coin)
+      setIconName('md-star'); // Favorite Icon should be tied to user data from firestore
     }
     setFavorite(!favorite);
     console.log(favorite)
