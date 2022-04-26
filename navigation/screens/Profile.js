@@ -1,33 +1,36 @@
 import React, { useState, useEffect } from "react";
 import { View, Button, StyleSheet, TouchableOpacity } from "react-native";
-import Icon from 'react-native-vector-icons/Ionicons';
-import { Avatar, Title, Caption, Text, TouchableRipple } from 'react-native-paper';
+import Icon from "react-native-vector-icons/Ionicons";
+import {
+  Avatar,
+  Title,
+  Caption,
+  Text,
+  TouchableRipple,
+} from "react-native-paper";
 import { SafeAreaView } from "react-native-safe-area-context";
 //import styles from "../../components/Profile/styles";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import EditProfileScreen from "./EditProfile";
-import { getFirestore, getDoc, doc, collection } from 'firebase/firestore';
+import { getFirestore, getDoc, doc, collection } from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import { FB_KEY } from "@env";
-import { db } from '../../firebase';
+import { db } from "../../firebase";
 import { auth } from "../../firebase";
 import { signOut } from "firebase/auth";
 
-
-
 export default function ProfileScreen({ navigation }) {
-
   const [isSignedIn, setIsSignedIn] = useState(false);
 
-  const [name, setName] = useState('');
-  const [username, setUsername] = useState('');
-  const [bio, setBio] = useState('')
-  const [num, setNum] = useState('');
-  const [email, setEmail] = useState('');
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [bio, setBio] = useState("");
+  const [num, setNum] = useState("");
+  const [email, setEmail] = useState("");
 
   // hakee datan kirjautuneen käyttäjätunnuksen id mukaan
   const getUserData = async () => {
-    const docRef = doc(db, 'users', 'XKudDwdMapNFtqBtJH46'); //myohemmin dokumentin tilalle: auth.currentUser.uid
+    const docRef = doc(db, auth.currentUser["uid"], "profiilidata"); //myohemmin dokumentin tilalle:  "XKudDwdMapNFtqBtJH46"
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
@@ -37,15 +40,16 @@ export default function ProfileScreen({ navigation }) {
       setNum(docSnap.data().num);
       setEmail(docSnap.data().email);
     } else {
-      console.log('No data found');
+      console.log("No data found");
     }
-  }
+  };
+
+  console.log(auth.currentUser["uid"]);
 
   //GetUserData funktio käynnistyy automaattisesti sivun ladatessa
   useEffect(() => {
-    getUserData()
-  }, [])
-
+    getUserData();
+  }, []);
 
   const handleSignOut = () => {
     signOut(auth)
@@ -55,12 +59,12 @@ export default function ProfileScreen({ navigation }) {
       })
       .catch((err) => {
         console.log(re);
-      })
-  }
+      });
+  };
 
   const handleEdit = () => {
     navigation.navigate("EditProfileScreen");
-  }
+  };
 
   const AppButton = ({ onPress, title }) => (
     <TouchableOpacity onPress={onPress} style={styles.commandButton}>
@@ -69,33 +73,38 @@ export default function ProfileScreen({ navigation }) {
   );
 
   return (
-
     <SafeAreaView style={styles.container}>
       {/* <View style={styles.userInfoSection}> */}
-      <View>
+      <View style={{ margin: 20 }}>
         <View>
           <Avatar.Image
             source={{
-              uri: 'https://unsplash.com/photos/HknZkracHjs'
+              uri: "https://unsplash.com/photos/HknZkracHjs",
             }}
             size={80}
           />
           <View style={{ marginLeft: 5 }}>
-            <Title style={[styles.title, {
-              marginTop: 15,
-              marginBottom: 5,
-
-            }]}>{name}</Title>
+            <Title
+              style={[
+                styles.title,
+                {
+                  marginTop: 15,
+                  marginBottom: 5,
+                },
+              ]}
+            >
+              {name}
+            </Title>
             <Caption style={styles.caption}>@{username}</Caption>
           </View>
-
 
           <View>
             {/* <View style={styles.userInfoSection}> */}
 
             <View style={styles.row}>
-              <Icon name="logo-usd" color="#FFFFFF" size={20} />
-              <Text style={{ color: "#FFFFFF", marginLeft: 20 }}>{bio}</Text>
+              <Text style={{ color: "#FFFFFF", marginTop: 20, marginLeft: 7 }}>
+                {bio}
+              </Text>
             </View>
 
             <View style={styles.infoBoxWrapper}>
@@ -107,37 +116,25 @@ export default function ProfileScreen({ navigation }) {
                 <Title style={styles.text}>8</Title>
                 <Caption style={styles.caption}>Currencies</Caption>
               </View>
-
             </View>
           </View>
           {/* <View style={styles.logout}> */}
           <View style={styles.logout}>
+            <AppButton onPress={handleSignOut} title="Sign out" />
 
-            <AppButton
-              onPress={handleSignOut}
-              title="Sign out"
-            />
-
-            <AppButton
-              onPress={handleEdit}
-              title="Edit Profile"
-            />
+            <AppButton onPress={handleEdit} title="Edit Profile" />
             {/* <Text style={styles.buttonText}>Edit profile</Text> */}
-
           </View>
         </View>
       </View>
-    </SafeAreaView >
-
-
+    </SafeAreaView>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0C2432',
+    backgroundColor: "#0C2432",
   },
   userInfoSection: {
     paddingHorizontal: 30,
@@ -145,67 +142,67 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
+    fontWeight: "bold",
+    color: "#FFFFFF",
   },
   text: {
     fontSize: 20,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
   caption: {
     fontSize: 14,
     lineHeight: 14,
-    fontWeight: '500',
-    color: '#FFFFFF',
+    fontWeight: "500",
+    color: "#FFFFFF",
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginBottom: 10,
   },
   infoBoxWrapper: {
-    borderBottomColor: '#dddddd',
+    borderBottomColor: "#dddddd",
     borderBottomWidth: 1,
-    borderTopColor: '#dddddd',
+    borderTopColor: "#dddddd",
     borderTopWidth: 1,
-    flexDirection: 'row',
+    flexDirection: "row",
     height: 100,
   },
   infoBox: {
-    width: '50%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: "50%",
+    alignItems: "center",
+    justifyContent: "center",
   },
   menuWrapper: {
     marginTop: 10,
   },
   menuItem: {
-    flexDirection: 'row',
+    flexDirection: "row",
     paddingVertical: 15,
     paddingHorizontal: 30,
   },
   menuItemText: {
-    color: '#777777',
+    color: "#777777",
     marginLeft: 20,
-    fontWeight: '600',
+    fontWeight: "600",
     fontSize: 16,
     lineHeight: 26,
   },
   logout: {
     //flex: 1,
-    justifyContent: 'center',
+    justifyContent: "center",
     //alignItems: 'center'
   },
   button: {
-    backgroundColor: '#0782F9',
-    width: '60%',
+    backgroundColor: "#0782F9",
+    width: "60%",
     padding: 15,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginTop: 40,
   },
   buttonText: {
-    color: 'white',
-    fontWeight: '700',
+    color: "white",
+    fontWeight: "700",
     fontSize: 16,
   },
   appButtonContainer: {
@@ -213,20 +210,20 @@ const styles = StyleSheet.create({
     backgroundColor: "#009688",
     borderRadius: 10,
     paddingVertical: 10,
-    paddingHorizontal: 12
+    paddingHorizontal: 12,
   },
   appButtonText: {
     fontSize: 18,
     color: "#fff",
     fontWeight: "bold",
     alignSelf: "center",
-    textTransform: "uppercase"
+    textTransform: "uppercase",
   },
   commandButton: {
     padding: 15,
     borderRadius: 10,
-    backgroundColor: '#009688',
-    alignItems: 'center',
+    backgroundColor: "#009688",
+    alignItems: "center",
     marginTop: 10,
   },
 });
