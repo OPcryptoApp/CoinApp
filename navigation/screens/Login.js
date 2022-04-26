@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   KeyboardAvoidingView,
   StyleSheet,
@@ -17,6 +17,14 @@ export default function LoginScreen() {
   const [isSignedIn, setIsSignedIn] = useState(false);
 
   const navigation = useNavigation();
+
+  useEffect(() => {
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        navigation.navigate("Home");
+      }
+    })
+  }, []);
 
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
