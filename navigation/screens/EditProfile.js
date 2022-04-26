@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,14 +7,10 @@ import {
   TextInput,
   StyleSheet,
   Alert,
-} from 'react-native';
+} from "react-native";
 import { initializeApp } from "firebase/app";
-import { FB_KEY } from "@env"
+import { FB_KEY } from "@env";
 //import Profile from './Profile';
-import { getFirestore, getDoc, setDoc, addDoc, collection, updateDoc, doc } from 'firebase/firestore';
-import { db } from '../../firebase';
-//import { name, username, bio, email, num } from './Profile';
-import { StackActions } from '@react-navigation/native';
 
 // TIMER ERROR 
 // 
@@ -24,23 +20,35 @@ import { StackActions } from '@react-navigation/native';
 //
 // Ongelma node_modulessa, joka asentuu aina uudestaan, ku tekee uuden 'npm install'
 
-export default function EditProfileScreen({ navigation }) {
+import {
+  getFirestore,
+  getDoc,
+  setDoc,
+  addDoc,
+  collection,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
+import { db, auth } from "../../firebase";
+import { name, username, bio, email, num } from "./Profile";
+import { StackActions } from "@react-navigation/native";
 
-  const [name, setName] = useState('');
-  const [username, setUsername] = useState('');
-  const [bio, setBio] = useState('')
-  const [num, setNum] = useState('');
-  const [email, setEmail] = useState('');
+export default function EditProfileScreen({ navigation }) {
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [bio, setBio] = useState("");
+  const [num, setNum] = useState("");
+  const [email, setEmail] = useState("");
 
   const popAction = StackActions.pop(1);
 
   const handlePop = () => {
     navigation.dispatch(popAction);
-  }
+  };
 
-  // hakee datan kirjautuneen käyttäjätunnuksen id mukaan, sama kuin profile.js:ssä
+  // hakee datan kirjautuneen käyttäjätunnuksen id mukaan
   const getUserData = async () => {
-    const docRef = doc(db, 'users', 'XKudDwdMapNFtqBtJH46'); //myohemmin dokumentin tilalle: auth.currentUser.uid
+    const docRef = doc(db, auth.currentUser["uid"], "profiilidata");
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
@@ -50,51 +58,51 @@ export default function EditProfileScreen({ navigation }) {
       setNum(docSnap.data().num);
       setEmail(docSnap.data().email);
     } else {
-      console.log('No data found');
+      console.log("No data found");
     }
-  }
+  };
 
   useEffect(() => {
-    getUserData()
-  }, [])
-
+    getUserData();
+  }, []);
 
   //lisää uuden datan (dokumentin) firestoreen jos ei ole olemassa
   //muuten päivittää / overwrite kaikki {} sisällä olevat parametrit
 
-  const saveDoc = () => {
-    const docRef = setDoc(doc(db, 'users', 'XKudDwdMapNFtqBtJH46'), {
+  //kollektionit on kirjautuneen käyttäjän uid, dokumentin nimi on profiilidata.
+  const saveDoc = async () => {
+    const docRef = setDoc(doc(db, auth.currentUser["uid"], "profiilidata"), {
       name: name,
       username: username,
       bio: bio,
       num: num,
-      email: email
+      email: email,
     });
     console.log("doc ID: ", docRef.id);
     Alert.alert("Alert", "Profile has been updated");
-  }
+  };
 
   return (
-
     <View style={styles.container}>
       <View style={{ margin: 20 }}>
-        <View style={{ alignItems: 'center' }}>
-          <TouchableOpacity onPress={() => { }}>
-            <View style={{
-              height: 100,
-              width: 100,
-              borderRadius: 15,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
+        <View style={{ alignItems: "center" }}>
+          <TouchableOpacity onPress={() => {}}>
+            <View
+              style={{
+                height: 100,
+                width: 100,
+                borderRadius: 15,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <ImageBackground
                 source={{
-                  uri: 'https://www.flickr.com/photos/gsfc/6760135001'
+                  uri: "https://www.flickr.com/photos/gsfc/6760135001",
                 }}
                 style={{ height: 100, width: 100 }}
                 imageStyle={{ borderRadius: 15 }}
-              >
-              </ImageBackground>
+              ></ImageBackground>
             </View>
           </TouchableOpacity>
         </View>
@@ -104,9 +112,7 @@ export default function EditProfileScreen({ navigation }) {
             placeholder="name"
             placeholderTextColor="#FFFFFF"
             autoCorrect={false}
-            style={[
-              styles.textInput,
-            ]}
+            style={[styles.textInput]}
             onChangeText={(name) => setName(name)}
             value={name}
           />
@@ -117,9 +123,7 @@ export default function EditProfileScreen({ navigation }) {
             placeholder="@"
             placeholderTextColor="#FFFFFF"
             autoCorrect={false}
-            style={[
-              styles.textInput,
-            ]}
+            style={[styles.textInput]}
             onChangeText={(username) => setUsername(username)}
             value={username}
           />
@@ -130,9 +134,7 @@ export default function EditProfileScreen({ navigation }) {
             placeholder="Bio"
             placeholderTextColor="#FFFFFF"
             autoCorrect={false}
-            style={[
-              styles.textInput,
-            ]}
+            style={[styles.textInput]}
             onChangeText={(bio) => setBio(bio)}
             value={bio}
           />
@@ -143,9 +145,7 @@ export default function EditProfileScreen({ navigation }) {
             placeholder="Phone"
             placeholderTextColor="#FFFFFF"
             autoCorrect={false}
-            style={[
-              styles.textInput,
-            ]}
+            style={[styles.textInput]}
             keyboardType="numeric"
             onChangeText={(num) => setNum(num)}
             value={num}
@@ -157,9 +157,7 @@ export default function EditProfileScreen({ navigation }) {
             placeholder="Email"
             placeholderTextColor="#FFFFFF"
             autoCorrect={false}
-            style={[
-              styles.textInput,
-            ]}
+            style={[styles.textInput]}
             onChangeText={(email) => setEmail(email)}
             value={email}
           />
@@ -182,32 +180,31 @@ export default function EditProfileScreen({ navigation }) {
         <TouchableOpacity style={styles.commandButton} onPress={handlePop}>
           <Text>Cancel</Text>
         </TouchableOpacity>
-
       </View>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0C2432',
+    backgroundColor: "#0C2432",
   },
   commandButton: {
     padding: 15,
     borderRadius: 10,
-    backgroundColor: '#009688',
-    alignItems: 'center',
+    backgroundColor: "#009688",
+    alignItems: "center",
     marginTop: 10,
   },
   panel: {
     padding: 20,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     paddingTop: 20,
   },
   header: {
-    backgroundColor: '#FFFFFF',
-    shadowColor: '#333333',
+    backgroundColor: "#FFFFFF",
+    shadowColor: "#333333",
     shadowOffset: { width: -1, height: -3 },
     shadowRadius: 2,
     shadowOpacity: 0.4,
@@ -216,13 +213,13 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
   },
   panelHeader: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   panelHandle: {
     width: 40,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#00000040',
+    backgroundColor: "#00000040",
     marginBottom: 10,
   },
   panelTitle: {
@@ -231,41 +228,41 @@ const styles = StyleSheet.create({
   },
   panelSubtitle: {
     fontSize: 14,
-    color: 'gray',
+    color: "gray",
     height: 30,
     marginBottom: 10,
   },
   panelButton: {
     padding: 13,
     borderRadius: 10,
-    backgroundColor: '#FF6347',
-    alignItems: 'center',
+    backgroundColor: "#FF6347",
+    alignItems: "center",
     marginVertical: 7,
   },
   panelButtonTitle: {
     fontSize: 17,
-    fontWeight: 'bold',
-    color: 'white',
+    fontWeight: "bold",
+    color: "white",
   },
   action: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 10,
     marginBottom: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#f2f2f2',
+    borderBottomColor: "#f2f2f2",
     paddingBottom: 5,
   },
   actionError: {
-    flexDirection: 'row',
+    flexDirection: "row",
     marginTop: 10,
     borderBottomWidth: 1,
-    borderBottomColor: '#FF0000',
+    borderBottomColor: "#FF0000",
     paddingBottom: 5,
   },
   textInput: {
     flex: 1,
-    marginTop: Platform.OS === 'ios' ? 0 : -12,
+    marginTop: Platform.OS === "ios" ? 0 : -12,
     paddingLeft: 10,
-    color: '#FFFFFF',
+    color: "#FFFFFF",
   },
 });
