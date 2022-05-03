@@ -26,17 +26,18 @@ export default function RegisterScreen() {
         console.log(userCredentials);
         setIsSignedIn(true);
         navigation.navigate("Home");
+        const docRef = setDoc(doc(db, auth.currentUser["uid"], "profiilidata"), {
+          name: name,
+          username: username,
+          bio: bio,
+          num: num,
+          email: email,
+        });
+        console.log("ID=" + docRef.id);
       })
       .catch((error) => {
         alert("Account already exists");
       });
-    const docRef = setDoc(doc(db, auth.currentUser["uid"], "profiilidata"), {
-      name: name,
-      username: username,
-      bio: bio,
-      num: num,
-      email: email,
-    });
   }
 
   const goBack = () => {
