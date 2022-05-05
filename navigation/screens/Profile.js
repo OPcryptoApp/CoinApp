@@ -85,16 +85,31 @@ export default function ProfileScreen({ navigation }) {
       {/* <View style={styles.userInfoSection}> */}
       <View style={{ margin: 20 }}>
         <View>
-          <Image
-            source={{ uri: image }}
-            style={{
-              width: 150,
-              height: 150,
-              borderRadius: 180 / 2,
-              alignSelf: "center",
-              marginBottom: 10,
-            }}
-          />
+          <View>
+            {image ? (
+              <Image
+                source={{ uri: image }}
+                style={{
+                  width: 150,
+                  height: 150,
+                  borderRadius: 180 / 2,
+                  alignSelf: "center",
+                }}
+              />
+            ) : (
+              <Image
+                source={{
+                  uri: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+                }}
+                style={{
+                  width: 150,
+                  height: 150,
+                  borderRadius: 180 / 2,
+                  alignSelf: "center",
+                }}
+              />
+            )}
+          </View>
           <View style={{ marginLeft: 5 }}>
             <Title
               style={[
