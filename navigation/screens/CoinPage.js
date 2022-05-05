@@ -21,6 +21,7 @@ export default function CoinPageScreen() {
   const route = useRoute();
   const [favorite, setFavorite] = useState(false);
   const [coin, setCoin] = useState(null);
+  const [coins, setCoins] = useState(null);
   let [fetchedCoinData, setFetchedCoinData] = useState(null);
 
   const [iconName, setIconName] = useState('md-star-outline');
@@ -34,12 +35,14 @@ export default function CoinPageScreen() {
 
   const [coinName, setCoinName] = useState('');
   const {
-    params: { coinId },
+    params: {
+      paramCoin
+    },
   } = route;
 
-
   const fetchCoinData = async () => {
-    fetchedCoinData = await getSingleCoinData(coinId);
+    console.log('paramcoin', paramCoin)
+    fetchedCoinData = await getSingleCoinData(paramCoin.uuid);
     setCoin(fetchedCoinData);
     setSymbol(fetchedCoinData.data.coin.symbol);
     setPrice(fetchedCoinData.data.coin.price);
@@ -49,8 +52,34 @@ export default function CoinPageScreen() {
   };
 
 
+  const coinCall = async () => {
+    console.log('COINCALL')
+    const coins = await coinService.getUserCoins()
+
+    console.log('usercoins:', coins)
+    setCoins(coins)
+    return coins
+  }
+
+  const getCoinFavorite = async () => {
+    console.log('COIN FAVORITE GET')
+    const favoriteStatus = await coinService.getCoinFavoriteStatus(paramCoin.uuid)
+
+    console.log('favoriteStautus', favoriteStatus)
+  }
+
   useEffect(() => {
     fetchCoinData();
+
+    try {
+      coinCall()
+      getCoinFavorite()
+    } catch {
+      console.log('error')
+    }
+
+
+
   }, []);
 
   const PercentageColor = ({ val }) => {
@@ -73,13 +102,13 @@ export default function CoinPageScreen() {
 
   const handleFavorite = () => {
     if (favorite === false) {
-      coinService.setCoinAsFavorite(coin)
       setIconName('md-star-outline'); // Favorite Icon should be tied to user data from firestore
     } else {
-      coinService.setCoinAsFavorite(coin)
       setIconName('md-star'); // Favorite Icon should be tied to user data from firestore
     }
-    setFavorite(!favorite);
+    console.log('paramCoin.coinId', paramCoin.coinId)
+    coinService.setCoinAsFavorite(paramCoin.coinId)
+    //setFavorite(!favorite);
     console.log(favorite)
   };
 
@@ -87,7 +116,9 @@ export default function CoinPageScreen() {
   return (
 
     <View style={styles.container}>
+
       <Ionicons style={styles.favorite} onPress={handleFavorite} name={iconName} size={30} />
+
       <Text style={styles.itemTitle}>{symbol} </Text>
 
       <SvgUri
@@ -107,6 +138,10 @@ export default function CoinPageScreen() {
       </View>
       <View style={styles.textField}>
         <Text style={styles.normalText}> tähän hintakäyrä </Text>
+      </View>
+
+      <View style={styles.textField}>
+        <Text style={styles.normalText}> {coins != null && coins.name} </Text>
       </View>
 
       <View style={styles.buttonContainer}>
