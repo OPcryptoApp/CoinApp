@@ -3,8 +3,11 @@ import {
   StyleSheet,
   View,
   Text,
+  TextInput,
 } from 'react-native';
 import 'react-native-gesture-handler';
+
+import Chart from '../../components/Graph/Chart'
 
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getSingleCoinData } from '../../services/requests';
@@ -13,7 +16,11 @@ import { SvgUri } from 'react-native-svg';
 import { Button } from 'react-native-paper';
 import millify from 'millify';
 
+
 import coinService from '../../services/coinService';
+
+import { getFirestore, getDoc, setDoc, addDoc, collection, updateDoc, doc } from 'firebase/firestore';
+import { db, auth } from '../../firebase';
 
 
 
@@ -25,12 +32,14 @@ export default function CoinPageScreen() {
 
   const [iconName, setIconName] = useState('md-star-outline');
 
-  //coinconsts 
+  //coinconsts
   const [name, setName] = useState('');
   const [symbol, setSymbol] = useState('');
   const [price, setPrice] = useState(0);
   const [image, setImage] = useState('');
   const [change, setChange] = useState('');
+  const [amount, setAmount] = useState('');
+  const [amountInUsd, setAmountInUsd] = useState(0);
 
   const [coinName, setCoinName] = useState('');
   const {
@@ -43,7 +52,6 @@ export default function CoinPageScreen() {
     setCoin(fetchedCoinData);
     setSymbol(fetchedCoinData.data.coin.symbol);
     setPrice(fetchedCoinData.data.coin.price);
-    setImage(fetchedCoinData.data.coin.iconUrl);
     setChange(fetchedCoinData.data.coin.change);
     setName(fetchedCoinData.data.coin.name);
   };
@@ -52,6 +60,10 @@ export default function CoinPageScreen() {
   useEffect(() => {
     fetchCoinData();
   }, []);
+
+
+
+
 
   const PercentageColor = ({ val }) => {
     if (val < 0) {
@@ -84,6 +96,43 @@ export default function CoinPageScreen() {
   };
 
 
+
+  // make const to calculate amount in usd
+  const calculateAmountInUsd = () => {
+    setAmountInUsd(amount * price);
+    console.log(amountInUsd)
+  };
+
+  const buy = () => {
+
+    //add coin to firebase with addDoc function
+    const docRef = setDoc(doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name), {
+      name: name,
+      symbol: symbol,
+      price: price,
+      coinId: coinId,
+      favorite: favorite,
+      amount: amount,
+      amountInUsd: amountInUsd
+    });
+  }
+
+
+
+
+  
+  const sell = () => {
+    //update the amount of coin in firebase
+    updateDoc(collection(db, 'ownedCoins', 'coin', name ), {
+      amount: amount,
+
+    });
+  }
+
+
+  
+
+
   return (
 
     <View style={styles.container}>
@@ -109,27 +158,40 @@ export default function CoinPageScreen() {
         <Text style={styles.normalText}> tähän hintakäyrä </Text>
       </View>
 
+     
+     <Chart name = {name} />
+
+      <View style={styles.textField}>
+        <TextInput
+          placeholder="amount"
+          keyboardType='numeric'
+          style={[
+            styles.textInput,
+          ]}
+          onChangeText={(amount) => setAmount(amount)}
+          value={amount}
+        />
+      </View>
+      
+
       <View style={styles.buttonContainer}>
 
         <Button
           style={styles.button}
           mode="contained"
-          onPress={() => {
-            console.log('buy button pressed');
-          }}
+          onPress={buy}
         >
           Buy
         </Button>
         <Button
           style={styles.button}
           mode="contained"
-          onPress={() => {
-            console.log('sell button pressed');
-          }}
+          onPress={sell}
         >
           Sell
         </Button>
       </View>
+
 
 
     </View>
@@ -244,5 +306,11 @@ const styles = StyleSheet.create({
     color: 'white',
     paddingRight: 20,
     fontSize: 30,
+  },
+  textInput: {
+    flex: 1,
+    marginTop: Platform.OS === 'ios' ? 0 : -12,
+    paddingLeft: 10,
+    color: 'black',
   },
 });
