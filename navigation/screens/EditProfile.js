@@ -7,13 +7,16 @@ import {
   TextInput,
   StyleSheet,
   Alert,
+  Button,
+  Image,
 } from "react-native";
+import * as ImagePicker from "expo-image-picker";
 import { initializeApp } from "firebase/app";
 import { FB_KEY } from "@env";
 //import Profile from './Profile';
 
-// TIMER ERROR 
-// 
+// TIMER ERROR
+//
 // voidaan jättää huomioimatta.
 // https://stackoverflow.com/questions/44603362/setting-a-timer-for-a-long-period-of-time-i-e-multiple-minutes
 // https://github.com/firebase/firebase-js-sdk/issues/97#issuecomment-485410026
@@ -39,6 +42,7 @@ export default function EditProfileScreen({ navigation }) {
   const [bio, setBio] = useState("");
   const [num, setNum] = useState("");
   const [email, setEmail] = useState("");
+  const [image, setImage] = useState(null);
 
   const popAction = StackActions.pop(1);
 
@@ -66,6 +70,22 @@ export default function EditProfileScreen({ navigation }) {
     getUserData();
   }, []);
 
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.cancelled) {
+      setImage(result.uri);
+    }
+  };
+
   //lisää uuden datan (dokumentin) firestoreen jos ei ole olemassa
   //muuten päivittää / overwrite kaikki {} sisällä olevat parametrit
 
@@ -77,6 +97,7 @@ export default function EditProfileScreen({ navigation }) {
       bio: bio,
       num: num,
       email: email,
+      image: image,
     });
     console.log("doc ID: ", docRef.id);
     Alert.alert("Alert", "Profile has been updated");
@@ -84,27 +105,25 @@ export default function EditProfileScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={{ margin: 20 }}>
-        <View style={{ alignItems: "center" }}>
-          <TouchableOpacity onPress={() => {}}>
-            <View
+      <View style={{ margin: 20, marginTop: 100 }}>
+        <View style={{ marginBottom: 50 }}>
+          {image && (
+            <Image
+              source={{ uri: image }}
               style={{
-                height: 100,
-                width: 100,
-                borderRadius: 15,
-                justifyContent: "center",
-                alignItems: "center",
+                width: 150,
+                height: 150,
+                borderRadius: 180 / 2,
+                alignSelf: "center",
+                marginBottom: 10,
               }}
-            >
-              <ImageBackground
-                source={{
-                  uri: "https://www.flickr.com/photos/gsfc/6760135001",
-                }}
-                style={{ height: 100, width: 100 }}
-                imageStyle={{ borderRadius: 15 }}
-              ></ImageBackground>
-            </View>
-          </TouchableOpacity>
+            />
+          )}
+          <Button
+            title="Upload image"
+            onPress={pickImage}
+            style={styles.commandButton}
+          />
         </View>
         <View style={styles.action}>
           <Text size={20} />
@@ -173,6 +192,7 @@ export default function EditProfileScreen({ navigation }) {
             ]}
           />
           </View>*/}
+
         <TouchableOpacity style={styles.commandButton} onPress={saveDoc}>
           <Text>Save</Text>
         </TouchableOpacity>

@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Button, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Button,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import {
   Avatar,
@@ -27,6 +33,7 @@ export default function ProfileScreen({ navigation }) {
   const [bio, setBio] = useState("");
   const [num, setNum] = useState("");
   const [email, setEmail] = useState("");
+  const [image, setImage] = useState(null);
 
   // hakee datan kirjautuneen käyttäjätunnuksen id mukaan
   const getUserData = async () => {
@@ -39,6 +46,7 @@ export default function ProfileScreen({ navigation }) {
       setBio(docSnap.data().bio);
       setNum(docSnap.data().num);
       setEmail(docSnap.data().email);
+      setImage(docSnap.data().image);
     } else {
       console.log("No data found");
     }
@@ -77,11 +85,15 @@ export default function ProfileScreen({ navigation }) {
       {/* <View style={styles.userInfoSection}> */}
       <View style={{ margin: 20 }}>
         <View>
-          <Avatar.Image
-            source={{
-              uri: "https://unsplash.com/photos/HknZkracHjs",
+          <Image
+            source={{ uri: image }}
+            style={{
+              width: 150,
+              height: 150,
+              borderRadius: 180 / 2,
+              alignSelf: "center",
+              marginBottom: 10,
             }}
-            size={80}
           />
           <View style={{ marginLeft: 5 }}>
             <Title
