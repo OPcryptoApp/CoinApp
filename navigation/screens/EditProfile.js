@@ -61,6 +61,7 @@ export default function EditProfileScreen({ navigation }) {
       setBio(docSnap.data().bio);
       setNum(docSnap.data().num);
       setEmail(docSnap.data().email);
+      setImage(docSnap.data().image);
     } else {
       console.log("No data found");
     }
