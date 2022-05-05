@@ -31,6 +31,7 @@ import {
   collection,
   updateDoc,
   doc,
+  onSnapshot,
 } from "firebase/firestore";
 import { db, auth } from "../../firebase";
 import { name, username, bio, email, num } from "./Profile";

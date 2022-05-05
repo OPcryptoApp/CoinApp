@@ -18,7 +18,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 //import styles from "../../components/Profile/styles";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import EditProfileScreen from "./EditProfile";
-import { getFirestore, getDoc, doc, collection } from "firebase/firestore";
+import {
+  getFirestore,
+  getDoc,
+  doc,
+  collection,
+  onSnapshot,
+} from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import { FB_KEY } from "@env";
 import { db } from "../../firebase";
@@ -35,28 +41,27 @@ export default function ProfileScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [image, setImage] = useState(null);
 
-  // hakee datan kirjautuneen käyttäjätunnuksen id mukaan
-  const getUserData = async () => {
-    const docRef = doc(db, auth.currentUser["uid"], "profiilidata"); //myohemmin dokumentin tilalle:  "XKudDwdMapNFtqBtJH46"
-    const docSnap = await getDoc(docRef);
+  // hakee datan kirjautuneen käyttäjätunnuksen id mukaan, reaaliaikaiset muutokset
 
-    if (docSnap.exists()) {
-      setName(docSnap.data().name);
-      setUsername(docSnap.data().username);
-      setBio(docSnap.data().bio);
-      setNum(docSnap.data().num);
-      setEmail(docSnap.data().email);
-      setImage(docSnap.data().image);
-    } else {
-      console.log("No data found");
-    }
+  const getUser = () => {
+    const unsub = onSnapshot(
+      doc(db, auth.currentUser["uid"], "profiilidata"),
+      (doc) => {
+        setName(doc.data().name);
+        setUsername(doc.data().username);
+        setBio(doc.data().bio);
+        setNum(doc.data().num);
+        setEmail(doc.data().email);
+        setImage(doc.data().image);
+      }
+    );
   };
 
   console.log(auth.currentUser["uid"]);
 
   //GetUserData funktio käynnistyy automaattisesti sivun ladatessa
   useEffect(() => {
-    getUserData();
+    getUser();
   }, []);
 
   const handleSignOut = () => {
