@@ -51,12 +51,13 @@ export default function CoinPageScreen() {
       setChange(fetchedCoinData.data.coin.change);
       setName(fetchedCoinData.data.coin.name);
       console.log('fetchedCoinData.data.coin.name:', fetchedCoinData.data.coin.name)
+      console.log('fetchedCoinData.data.coin.name:', fetchedCoinData.data.coin.uuid)
+
       console.log('name in coinPage:', name)
 
     };
 
     fetchCoinData();
-
     setL(false);
   }, []);
 
