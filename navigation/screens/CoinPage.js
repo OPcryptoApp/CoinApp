@@ -17,6 +17,8 @@ import Chart from '../../components/Graph/Chart';
 
 
 export default function CoinPageScreen() {
+  const [l, setL] = useState(true);
+
   const route = useRoute();
   const [favorite, setFavorite] = useState(false);
   const [coin, setCoin] = useState(null);
@@ -37,21 +39,25 @@ export default function CoinPageScreen() {
   } = route;
 
 
-  const fetchCoinData = async () => {
-    fetchedCoinData = await getSingleCoinData(coinId);
-    setCoin(fetchedCoinData);
-    setSymbol(fetchedCoinData.data.coin.symbol);
-    setPrice(fetchedCoinData.data.coin.price);
-    setImage(fetchedCoinData.data.coin.iconUrl);
-    setChange(fetchedCoinData.data.coin.change);
-    setName(fetchedCoinData.data.coin.name);
-    console.log('fetchedCoinData.data.coin.name', fetchedCoinData.data.coin.name)
-    console.log('name', name)
-  };
-
 
   useEffect(() => {
+
+    const fetchCoinData = async () => {
+      fetchedCoinData = await getSingleCoinData(coinId);
+      setCoin(fetchedCoinData);
+      setSymbol(fetchedCoinData.data.coin.symbol);
+      setPrice(fetchedCoinData.data.coin.price);
+      setImage(fetchedCoinData.data.coin.iconUrl);
+      setChange(fetchedCoinData.data.coin.change);
+      setName(fetchedCoinData.data.coin.name);
+      console.log('fetchedCoinData.data.coin.name:', fetchedCoinData.data.coin.name)
+      console.log('name in coinPage:', name)
+
+    };
+
     fetchCoinData();
+
+    setL(false);
   }, []);
 
   const PercentageColor = ({ val }) => {
@@ -84,6 +90,7 @@ export default function CoinPageScreen() {
   };
 
 
+
   return (
 
     <View style={styles.container}>
@@ -106,7 +113,8 @@ export default function CoinPageScreen() {
         />
       </View>
       <View>
-        <Chart name={name}></Chart>
+
+        {l == false && <Chart name={fetchedCoinData}></Chart>}
       </View>
 
       <View style={styles.buttonContainer}>
