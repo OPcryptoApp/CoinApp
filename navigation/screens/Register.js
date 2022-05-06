@@ -7,6 +7,7 @@ import {
   doc,
 } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { Alert } from 'react-native-web';
 
 export default function RegisterScreen() {
 
@@ -36,8 +37,13 @@ export default function RegisterScreen() {
         console.log("ID=" + docRef.id);
       })
       .catch((error) => {
-        alert("Account already exists");
+        if (password.length < 6) {
+          alert("Password must be atleast 6 characters");
+        } else {
+          alert("Something went wrong");
+        }
       });
+
   }
 
   const goBack = () => {
@@ -49,7 +55,7 @@ export default function RegisterScreen() {
       style={styles.container}
     >
       <View>
-        <Text style={styles.header}>KryptoApp</Text>
+        <Text style={styles.header}>CryptoApp</Text>
       </View>
       <View style={styles.inputContainer}>
         <TextInput

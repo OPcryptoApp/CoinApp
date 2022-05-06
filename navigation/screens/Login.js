@@ -35,7 +35,7 @@ export default function LoginScreen() {
         navigation.navigate("Home");
       })
       .catch((error) => {
-        alert("Error");
+        alert(error);
       });
   };
 
@@ -46,7 +46,7 @@ export default function LoginScreen() {
   return (
     <KeyboardAvoidingView style={styles.container}>
       <View>
-        <Text style={styles.header}>KryptoApp</Text>
+        <Text style={styles.header}>CryptoApp</Text>
       </View>
       <View style={styles.inputContainer}>
         <TextInput
