@@ -44,7 +44,10 @@ export default function LoginScreen() {
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior="padding">
+    <KeyboardAvoidingView style={styles.container}>
+      <View>
+        <Text style={styles.header}>KryptoApp</Text>
+      </View>
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Email"
@@ -82,6 +85,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingTop: "20%",
+    backgroundColor: "#0C2432",
+  },
+  header: {
+    color: "white",
+    fontSize: 50,
+    marginBottom: 90,
   },
   inputContainer: {
     width: "80%",
@@ -100,16 +109,16 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   button: {
-    backgroundColor: "#0782F9",
+    backgroundColor: "#009688",
     width: "100%",
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 30,
     alignItems: "center",
   },
   buttonOutline: {
     backgroundColor: "white",
     marginTop: 5,
-    borderColor: "#0782F9",
+    borderColor: "#009688",
     borderWidth: 2,
   },
   buttonText: {
@@ -118,7 +127,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   buttonOutlineText: {
-    color: "#0782F9",
+    color: "#009688",
     fontWeight: "700",
     fontSize: 16,
   },

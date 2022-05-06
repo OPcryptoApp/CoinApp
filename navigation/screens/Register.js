@@ -47,8 +47,10 @@ export default function RegisterScreen() {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior="padding"
     >
+      <View>
+        <Text style={styles.header}>KryptoApp</Text>
+      </View>
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Name"
@@ -112,7 +114,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: '25%',
+    paddingTop: 45,
+    backgroundColor: '#0C2432',
+  },
+  header: {
+    color: 'white',
+    fontSize: 50,
+    paddingBottom: 20,
   },
   inputContainer: {
     width: '80%'
@@ -131,16 +139,16 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   button: {
-    backgroundColor: '#0782F9',
+    backgroundColor: '#009688',
     width: '100%',
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 30,
     alignItems: 'center',
   },
   buttonOutline: {
     backgroundColor: 'white',
     marginTop: 5,
-    borderColor: '#0782F9',
+    borderColor: '#009688',
     borderWidth: 2,
   },
   buttonText: {
@@ -149,7 +157,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   buttonOutlineText: {
-    color: '#0782F9',
+    color: '#009688',
     fontWeight: '700',
     fontSize: 16,
   },
