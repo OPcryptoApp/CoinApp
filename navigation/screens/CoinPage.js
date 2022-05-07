@@ -41,7 +41,7 @@ export default function CoinPageScreen() {
   } = route;
 
   const fetchCoinData = async () => {
-    console.log('paramcoin', paramCoin)
+    console.log('paramcoin', paramCoin.name)
     fetchedCoinData = await getSingleCoinData(paramCoin.uuid);
     setCoin(fetchedCoinData);
     setSymbol(fetchedCoinData.data.coin.symbol);
@@ -62,24 +62,20 @@ export default function CoinPageScreen() {
   }
 
   const getCoinFavorite = async () => {
-    console.log('COIN FAVORITE GET')
-    const favoriteStatus = await coinService.getCoinFavoriteStatus(paramCoin.uuid)
-
+    //console.log('COIN FAVORITE GET')
+    const favoriteStatus = await coinService.getCoinFavoriteStatus(paramCoin)
     console.log('favoriteStautus', favoriteStatus)
+    setFavorite(favoriteStatus)
   }
 
   useEffect(() => {
     fetchCoinData();
-
+    coinCall()
     try {
-      coinCall()
       getCoinFavorite()
     } catch {
       console.log('error')
     }
-
-
-
   }, []);
 
   const PercentageColor = ({ val }) => {
@@ -100,24 +96,22 @@ export default function CoinPageScreen() {
     }
   };
 
-  const handleFavorite = () => {
-    if (favorite === false) {
-      setIconName('md-star-outline'); // Favorite Icon should be tied to user data from firestore
-    } else {
-      setIconName('md-star'); // Favorite Icon should be tied to user data from firestore
-    }
-    console.log('paramCoin.coinId', paramCoin.coinId)
-    coinService.setCoinAsFavorite(paramCoin.coinId)
-    //setFavorite(!favorite);
-    console.log(favorite)
+  const handleFavorite = async () => {
+    coinService.setCoinAsFavorite(paramCoin)
+    const favoriteStatus = await coinService.getCoinFavoriteStatus(paramCoin) // COIN TÄHTEÄ EI VIELÄ MUUTETA OIKEIN
+    console.log('favoriteStautus', favoriteStatus)
+    setFavorite(favoriteStatus)
   };
 
 
   return (
 
     <View style={styles.container}>
+      {favorite ?
+        <Ionicons style={styles.favorite} onPress={handleFavorite} name={'md-star'} size={30} />
+        : <Ionicons style={styles.favorite} onPress={handleFavorite} name={'md-star-outline'} size={30} />
+      }
 
-      <Ionicons style={styles.favorite} onPress={handleFavorite} name={iconName} size={30} />
 
       <Text style={styles.itemTitle}>{symbol} </Text>
 

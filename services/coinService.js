@@ -3,6 +3,7 @@ import {
   getFirestore,
   getDoc,
   setDoc,
+  deleteDoc,
   addDoc,
   collection,
   updateDoc,
@@ -22,63 +23,46 @@ import {
   Alert,
 } from "react-native"
 
-
 const getCoinFavoriteStatus = async coin => {
-  const docRef = doc(db, auth.currentUser["uid"], "lempikolikot", coin)
+  console.log('COIN COIN FAVORITE:', coin.name)
+  //console.log('auth.currentUser["uid"]: ', auth.currentUser["uid"])
+  const docRef = doc(db, auth.currentUser["uid"], "coins", "lempikolikot", coin.uuid)
   const docSnap = await getDoc(docRef)
 
   if (docSnap.exists()) {
-    const favoriteStatus = docSnap.data().favorite
-    return favoriteStatus
+    return true
   } else {
-    console.log("No data found")
+    return false
   }
 }
 
 const setCoinAsFavorite = async (coin) => {
-  //check if already favorite
-  //if not set as favorite
-  //else remove coin from favorite
-  //fetch coindata from user's firestore
-  console.log('COIN DATA in coinService', coin)
-  const docRef = doc(db, auth.currentUser["uid"], "lempikolikot")
+
+  console.log('COIN DATA in coinService', coin.name)
+  const docRef = doc(db, auth.currentUser["uid"], "coins", "lempikolikot", coin.uuid)
   const docSnap = await getDoc(docRef)
 
   if (docSnap.exists()) {
-    initCoin(coin, !docSnap.data().favorite)
+
+    console.log('docSnap.data()', docSnap.data())
+    await deleteDoc(docRef)
+    return false
   } else {
-    initCoin(coin, true)
+    addCoinToFavorites(coin)
+    return true
   }
 }
 
-const initCoin = async ({ coin, favorite }) => {
-  console.log('init coin', coin)
-  console.log('init favorite', favorite)
-  const docRef = setDoc(doc(db, auth.currentUser["uid"], "lempikolikot"), {
-    123: {
-      favorite: favorite
-    }
+const addCoinToFavorites = async (coin) => {
+  console.log('ADD COIN to favorites, coin: ', coin.name)
+  setDoc(doc(db, auth.currentUser["uid"], "coins", "lempikolikot", coin.uuid), {
+    name: coin.name
   })
-  console.log("doc ID: ", docRef)
   Alert.alert("Alert", "Coin set as favorite.")
 }
 
-/*
-  const saveDoc = async () => {
-    const docRef = setDoc(doc(db, auth.currentUser["uid"], "profiilidata"), {
-      name: name,
-      username: username,
-      bio: bio,
-      num: num,
-      email: email,
-    });
-    console.log("doc ID: ", docRef.id);
-    Alert.alert("Alert", "Profile has been updated");
-  };
-  */
-
 const getUserCoins = async () => {
-  const docRef = doc(db, auth.currentUser["uid"], "profiilidata")
+  const docRef = doc(db, auth.currentUser["uid"], "coins")
   const docSnap = await getDoc(docRef)
 
   if (docSnap.exists()) {
