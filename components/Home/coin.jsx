@@ -2,16 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Image, FlatList } from 'react-native';
 import styles from './styles'
 import millify from 'millify';
-/* import AsyncStorage from '@react-native-async-storage/async-storage';
- */import axios from "axios";
+import axios from "axios";
 import { SvgUri } from 'react-native-svg';
+import coinService from '../../services/coinService';
 
 // import .env tiedostosta api-avaimet ja muut, jotka ei kuulu githubiin
 import { COIN_API, SECRET_KEY } from "@env"
-
-//import 'dotenv/config'
-//require('dotenv').config()
-
 
 const storeData = async (value) => {
   console.log('value', value)
@@ -24,38 +20,13 @@ const storeData = async (value) => {
 
 export default function Coin() {
 
-  /* const [asyncNumber, setAsyncNumber] = useState(5) */
   const [listData, setListData] = useState([])
-  //const [coinListData, setCoinListData] = useState([])
-
-  /*   const getData = async () => {
-      try {
-        const value = await AsyncStorage.getItem('@storage_Key')
-        if (value !== null) {
-          console.log('value get', parseInt(value))
-          // value previously stored
-          setAsyncNumber(parseInt(value))
-        }
-      } catch (e) {
-        // error reading value
-      }
-    } */
 
   useEffect(async () => {
-    /* var a = asyncNumber */
-    console.log(process.env)
-    console.log("response data", COIN_API);
-    /* try {
-      const value = await AsyncStorage.getItem('@storage_Key')
-      if (value !== null) {
-        console.log('value get', parseInt(value))
-        // value previously stored
-        setAsyncNumber(parseInt(value))
-        a = parseInt(value)
-      }
-    } catch (e) {
-      // error reading value
-    } */
+    const favoriteList = coinService.getFavoriteCoins();
+
+    //console.log(process.env)
+    //console.log("response data", COIN_API);
 
     axios.request({
       method: 'GET',
@@ -75,7 +46,7 @@ export default function Coin() {
         'x-rapidapi-key': process.env.COIN_API
       }
     }).then(function (response) {
-      console.log("response data", response.data);
+      //console.log("response data", response.data);
       setListData(response.data.data.coins)
     }).catch(function (error) {
       console.error(error);
@@ -83,7 +54,10 @@ export default function Coin() {
 
   }, [])
 
-  console.log('listData', listData)
+  //console.log('listData', listData)
+
+
+
 
   const DataItem = ({ rank }) => (
     <Text> Rank: {rank}</Text>
@@ -151,34 +125,6 @@ export default function Coin() {
         keyExtractor={(item, i) => 'key' + i}
 
       />
-
-
-
-      {/*  <Image 
-                    source={{
-                        uri: "https://assets.coingecko.com/coins/images/825/small/binance-coin-logo.png?1547034615",
-                    }}
-                    style={{
-                        height: 30,
-                        width: 30,
-                        marginRight: 10,
-                        alignSelf: 'center',
-                        
-                    }}
-                />
-                <View>
-                <Text style={{fontWeight:'bold', color:'white'}}>Coin</Text>
-                <View style={{flexDirection: 'row'}}>
-                <Text style={{marginRight:5, color:'white'}}>BNB</Text>
-              
-                </View>
-                </View>
-                <View style={{marginLeft:'auto'}}>
-                    <Text style={{fontWeight:'bold', color:'white'}}>$439.55</Text>
-                    <Text style={{color:'#10C22C', textAlign:'right', fontWeight:'bold'}}>2.8%</Text>
-                </View> */}
-
-
 
     </View>
 

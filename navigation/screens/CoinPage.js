@@ -15,7 +15,21 @@ import millify from 'millify';
 
 import coinService from '../../services/coinService';
 
-
+import {
+  getFirestore,
+  getDoc,
+  setDoc,
+  deleteDoc,
+  addDoc,
+  collection,
+  updateDoc,
+  doc,
+  onSnapshot
+} from "firebase/firestore"
+import {
+  db,
+  auth
+} from '../../firebase'
 
 export default function CoinPageScreen() {
   const route = useRoute();
@@ -61,20 +75,26 @@ export default function CoinPageScreen() {
     return coins
   }
 
-  const getCoinFavorite = async () => {
-    //console.log('COIN FAVORITE GET')
-    const favoriteStatus = await coinService.getCoinFavoriteStatus(paramCoin)
-    console.log('favoriteStautus', favoriteStatus)
-    setFavorite(favoriteStatus)
+  const getCoinFavorite = () => {
+    const unsub = onSnapshot(
+      doc(db, auth.currentUser["uid"], "coins", 'lempikolikot', paramCoin.uuid),
+      (doc) => {
+        if (doc.data() != undefined) {
+          setFavorite(true)
+        } else {
+          setFavorite(false)
+        }
+      }
+    )
   }
 
   useEffect(() => {
     fetchCoinData();
-    coinCall()
+    //coinCall()
     try {
       getCoinFavorite()
-    } catch {
-      console.log('error')
+    } catch (e) {
+      console.log('error', e)
     }
   }, []);
 
@@ -95,12 +115,19 @@ export default function CoinPageScreen() {
       )
     }
   };
-
+  /* 
+    const unsub = onSnapshot(
+      doc(db, auth.currentUser["uid"], "coins"),
+      (doc) => {
+        console.log('doc', doc)
+      }
+    )
+   */
   const handleFavorite = async () => {
     coinService.setCoinAsFavorite(paramCoin)
-    const favoriteStatus = await coinService.getCoinFavoriteStatus(paramCoin) // COIN TÄHTEÄ EI VIELÄ MUUTETA OIKEIN
-    console.log('favoriteStautus', favoriteStatus)
-    setFavorite(favoriteStatus)
+    //const favoriteStatus = await coinService.getCoinFavoriteStatus(paramCoin) // COIN TÄHTEÄ EI VIELÄ MUUTETA OIKEIN
+    //console.log('favoriteStautus', favoriteStatus)
+    //setFavorite(favoriteStatus)
   };
 
 

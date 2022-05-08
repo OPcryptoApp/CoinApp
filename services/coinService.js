@@ -8,20 +8,12 @@ import {
   collection,
   updateDoc,
   doc,
+  onSnapshot
 } from "firebase/firestore"
 import {
   db,
-  auth
+  auth,
 } from "../firebase"
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ImageBackground,
-  TextInput,
-  StyleSheet,
-  Alert,
-} from "react-native"
 
 const getCoinFavoriteStatus = async coin => {
   console.log('COIN COIN FAVORITE:', coin.name)
@@ -58,22 +50,46 @@ const addCoinToFavorites = async (coin) => {
   setDoc(doc(db, auth.currentUser["uid"], "coins", "lempikolikot", coin.uuid), {
     name: coin.name
   })
-  Alert.alert("Alert", "Coin set as favorite.")
+  //Alert.alert("Alert", "Coin set as favorite.")
+}
+
+
+// TÄÄÄ EI TOIMI. Miten saa LISTATTUA documentit COLLECTIONISTA COLLECTIONIN SISÄLTÄ. Argh
+const getFavoriteCoins = async () => {
+  const favoriteList = []
+  //const docRef = doc(db, auth.currentUser["uid"], 'coins', 'lempikolikot')
+  console.log('ASDASDDAS 2')
+  //const colSnap = await db.collection(auth.currentUser["uid"]).get()
+  const colSnap = collection(db, auth.currentUser["uid"], 'coins', 'lempikolikot')
+
+
+  const ss = await colRef.get();
+  console.log('ss', ss)
+  colSnap.forEach(doc => {
+    console.log('docdocs')
+  })
+  //const docSnap = await getDoc(docRef)
+
+
+  if (docSnap.exists()) {
+    docSnap.data();
+
+  } else {
+    console.log("No data found");
+  }
+
+  console.log('docSnap.data in favcoins: _ _ ', docSnap.data())
+  return favoriteList
 }
 
 const getUserCoins = async () => {
-  const docRef = doc(db, auth.currentUser["uid"], "coins")
+  const docRef = doc(db, auth.currentUser["uid"], "coins", "lempikolikot")
   const docSnap = await getDoc(docRef)
 
   if (docSnap.exists()) {
-    const name = docSnap.data().name
-    const username = docSnap.data().username
-    const bio = docSnap.data().bio
-    const num = docSnap.data().num
-    const email = docSnap.data().email
+    var favoriteCoinList = docSnap.data()
 
-    const coins = { name, username, bio, num, email }
-    console.log('Coins from coinService', coins)
+    console.log('Coins from coinService', favoriteCoinList)
     return coins
   } else {
     console.log("No data found")
@@ -83,6 +99,6 @@ const getUserCoins = async () => {
 
 
 
-const coinService = { setCoinAsFavorite, getUserCoins, getCoinFavoriteStatus }
+const coinService = { setCoinAsFavorite, getUserCoins, getCoinFavoriteStatus, getFavoriteCoins }
 
 export default coinService
