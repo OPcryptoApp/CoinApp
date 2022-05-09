@@ -60,14 +60,14 @@ const getFavoriteCoins = async () => {
   //const docRef = doc(db, auth.currentUser["uid"], 'coins', 'lempikolikot')
   console.log('ASDASDDAS 2')
   //const colSnap = await db.collection(auth.currentUser["uid"]).get()
-  const colSnap = collection(db, auth.currentUser["uid"], 'coins', 'lempikolikot')
+  //const colSnap = collection(db, auth.currentUser["uid"], 'coins', 'lempikolikot')
 
 
-  const ss = await colRef.get();
-  console.log('ss', ss)
-  colSnap.forEach(doc => {
-    console.log('docdocs')
-  })
+  //const ss = await colRef.get();
+  //console.log('ss', ss)
+  //colSnap.forEach(doc => {
+  //  console.log('docdocs')
+  //})
   //const docSnap = await getDoc(docRef)
 
 
