@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import {
@@ -57,8 +58,6 @@ export default function ProfileScreen({ navigation }) {
     );
   };
 
-  console.log(auth.currentUser["uid"]);
-
   //GetUserData funktio käynnistyy automaattisesti sivun ladatessa
   useEffect(() => {
     getUser();
@@ -79,6 +78,13 @@ export default function ProfileScreen({ navigation }) {
     navigation.navigate("EditProfileScreen");
   };
 
+  const confirmBox = () => {
+    return Alert.alert("Are you sure?", "Are you sure you want to log out?", [
+      { text: "Yes", onPress: () => handleSignOut() },
+      { text: "No" },
+    ]);
+  };
+
   const AppButton = ({ onPress, title }) => (
     <TouchableOpacity onPress={onPress} style={styles.commandButton}>
       <Text style={styles.appButtonText}>{title}</Text>
@@ -89,6 +95,16 @@ export default function ProfileScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
       {/* <View style={styles.userInfoSection}> */}
       <View style={{ margin: 20 }}>
+        <Text
+          style={{
+            color: "#d1e0e8",
+            fontWeight: "bold",
+            fontSize: 20,
+            marginBottom: 20,
+          }}
+        >
+          Profile
+        </Text>
         <View>
           <View>
             {image ? (
@@ -134,7 +150,7 @@ export default function ProfileScreen({ navigation }) {
             {/* <View style={styles.userInfoSection}> */}
 
             <View style={styles.row}>
-              <Text style={{ color: "#FFFFFF", marginTop: 20, marginLeft: 7 }}>
+              <Text style={{ color: "#d1e0e8", marginTop: 20, marginLeft: 7 }}>
                 {bio}
               </Text>
             </View>
@@ -152,7 +168,7 @@ export default function ProfileScreen({ navigation }) {
           </View>
           {/* <View style={styles.logout}> */}
           <View style={styles.logout}>
-            <AppButton onPress={handleSignOut} title="Sign out" />
+            <AppButton onPress={confirmBox} title="Sign out" />
 
             <AppButton onPress={handleEdit} title="Edit Profile" />
             {/* <Text style={styles.buttonText}>Edit profile</Text> */}
@@ -167,6 +183,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#0C2432",
+    paddingTop: 20,
   },
   userInfoSection: {
     paddingHorizontal: 30,
@@ -175,17 +192,17 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#FFFFFF",
+    color: "#d1e0e8",
   },
   text: {
     fontSize: 20,
-    color: "#FFFFFF",
+    color: "#d1e0e8",
   },
   caption: {
     fontSize: 14,
     lineHeight: 14,
     fontWeight: "500",
-    color: "#FFFFFF",
+    color: "#d1e0e8",
   },
   row: {
     flexDirection: "row",
@@ -198,6 +215,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     flexDirection: "row",
     height: 100,
+    marginBottom: 20,
   },
   infoBox: {
     width: "50%",
