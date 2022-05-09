@@ -96,7 +96,7 @@ export default function Market() {
   const renderItem = ({ item }) => (
 
 
-    < TouchableOpacity onPress={() => { navigation.navigate('CoinPageScreen', { coinId: item.uuid }) }}>
+    < TouchableOpacity onPress={() => { navigation.navigate('CoinPageScreen', { paramCoin: item }) }}>
 
 
       <View style={styles.item}>
