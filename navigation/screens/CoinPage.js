@@ -24,7 +24,8 @@ import {
   collection,
   updateDoc,
   doc,
-  onSnapshot
+  onSnapshot,
+  getDocs
 } from "firebase/firestore"
 import {
   db,
@@ -88,9 +89,10 @@ export default function CoinPageScreen() {
     )
   }
 
+
+
   useEffect(() => {
     fetchCoinData();
-    //coinCall()
     try {
       getCoinFavorite()
     } catch (e) {

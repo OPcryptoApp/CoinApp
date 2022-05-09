@@ -23,16 +23,16 @@ export default function Coin() {
   const [listData, setListData] = useState([])
 
   useEffect(async () => {
-    const favoriteList = coinService.getFavoriteCoins();
+    const favoriteList = await coinService.getFavoriteCoins();
+    console.log('favoritelist', favoriteList)
 
-    //console.log(process.env)
-    //console.log("response data", COIN_API);
+    const dollarUuid = 'yhjMzLPhuIDl'
 
     axios.request({
       method: 'GET',
       url: 'https://coinranking1.p.rapidapi.com/coins',
       params: {
-        referenceCurrencyUuid: '5k-_VTxqtCEI',
+        referenceCurrencyUuid: dollarUuid,
         timePeriod: '24h',
         tiers: '1',
         orderBy: 'marketCap',
@@ -46,7 +46,7 @@ export default function Coin() {
         'x-rapidapi-key': process.env.COIN_API
       }
     }).then(function (response) {
-      //console.log("response data", response.data);
+      //console.log("response data", response.data);s
       setListData(response.data.data.coins)
     }).catch(function (error) {
       console.error(error);
