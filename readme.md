@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   <a href="">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="images/logo.png" alt="Logo" width="400" height="400">
   </a>
 
   <h3 align="center">KryptoApp - ohjelmistoprojekti 2 työ</h3>
