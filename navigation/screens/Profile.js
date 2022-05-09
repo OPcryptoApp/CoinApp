@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Alert,
+  ScrollView
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import {
@@ -94,7 +95,7 @@ export default function ProfileScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       {/* <View style={styles.userInfoSection}> */}
-      <View style={{ margin: 20 }}>
+      <ScrollView style={{ margin: 20 }}>
         <Text
           style={{
             color: "#d1e0e8",
@@ -174,7 +175,7 @@ export default function ProfileScreen({ navigation }) {
             {/* <Text style={styles.buttonText}>Edit profile</Text> */}
           </View>
         </View>
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
