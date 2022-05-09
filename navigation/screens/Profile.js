@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { View, Button, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  View,
+  Button,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import {
   Avatar,
@@ -12,7 +18,13 @@ import { SafeAreaView } from "react-native-safe-area-context";
 //import styles from "../../components/Profile/styles";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import EditProfileScreen from "./EditProfile";
-import { getFirestore, getDoc, doc, collection } from "firebase/firestore";
+import {
+  getFirestore,
+  getDoc,
+  doc,
+  collection,
+  onSnapshot,
+} from "firebase/firestore";
 import { initializeApp } from "firebase/app";
 import { FB_KEY } from "@env";
 import { db } from "../../firebase";
@@ -27,38 +39,39 @@ export default function ProfileScreen({ navigation }) {
   const [bio, setBio] = useState("");
   const [num, setNum] = useState("");
   const [email, setEmail] = useState("");
+  const [image, setImage] = useState(null);
 
-  // hakee datan kirjautuneen käyttäjätunnuksen id mukaan
-  const getUserData = async () => {
-    const docRef = doc(db, auth.currentUser["uid"], "profiilidata"); //myohemmin dokumentin tilalle:  "XKudDwdMapNFtqBtJH46"
-    const docSnap = await getDoc(docRef);
+  // hakee datan kirjautuneen käyttäjätunnuksen id mukaan, reaaliaikaiset muutokset
 
-    if (docSnap.exists()) {
-      setName(docSnap.data().name);
-      setUsername(docSnap.data().username);
-      setBio(docSnap.data().bio);
-      setNum(docSnap.data().num);
-      setEmail(docSnap.data().email);
-    } else {
-      console.log("No data found");
-    }
+  const getUser = () => {
+    const unsub = onSnapshot(
+      doc(db, auth.currentUser["uid"], "profiilidata"),
+      (doc) => {
+        setName(doc.data().name);
+        setUsername(doc.data().username);
+        setBio(doc.data().bio);
+        setNum(doc.data().num);
+        setEmail(doc.data().email);
+        setImage(doc.data().image);
+      }
+    );
   };
 
   console.log(auth.currentUser["uid"]);
 
   //GetUserData funktio käynnistyy automaattisesti sivun ladatessa
   useEffect(() => {
-    getUserData();
+    getUser();
   }, []);
 
   const handleSignOut = () => {
     signOut(auth)
-      .then((re) => {
+      .then(() => {
         setIsSignedIn(false);
         navigation.navigate("Login");
       })
-      .catch((err) => {
-        console.log(re);
+      .catch((error) => {
+        alert(error);
       });
   };
 
@@ -77,12 +90,31 @@ export default function ProfileScreen({ navigation }) {
       {/* <View style={styles.userInfoSection}> */}
       <View style={{ margin: 20 }}>
         <View>
-          <Avatar.Image
-            source={{
-              uri: "https://unsplash.com/photos/HknZkracHjs",
-            }}
-            size={80}
-          />
+          <View>
+            {image ? (
+              <Image
+                source={{ uri: image }}
+                style={{
+                  width: 150,
+                  height: 150,
+                  borderRadius: 180 / 2,
+                  alignSelf: "center",
+                }}
+              />
+            ) : (
+              <Image
+                source={{
+                  uri: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+                }}
+                style={{
+                  width: 150,
+                  height: 150,
+                  borderRadius: 180 / 2,
+                  alignSelf: "center",
+                }}
+              />
+            )}
+          </View>
           <View style={{ marginLeft: 5 }}>
             <Title
               style={[
