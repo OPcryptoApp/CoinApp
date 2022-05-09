@@ -7,6 +7,7 @@ import {
   doc,
 } from "firebase/firestore";
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { Alert } from 'react-native-web';
 
 export default function RegisterScreen() {
 
@@ -36,8 +37,13 @@ export default function RegisterScreen() {
         console.log("ID=" + docRef.id);
       })
       .catch((error) => {
-        alert("Account already exists");
+        if (password.length < 6) {
+          alert("Password must be atleast 6 characters");
+        } else {
+          alert("Something went wrong");
+        }
       });
+
   }
 
   const goBack = () => {
@@ -47,8 +53,10 @@ export default function RegisterScreen() {
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior="padding"
     >
+      <View>
+        <Text style={styles.header}>CryptoApp</Text>
+      </View>
       <View style={styles.inputContainer}>
         <TextInput
           placeholder="Name"
@@ -112,7 +120,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: '25%',
+    paddingTop: 45,
+    backgroundColor: '#0C2432',
+  },
+  header: {
+    color: 'white',
+    fontSize: 50,
+    paddingBottom: 20,
   },
   inputContainer: {
     width: '80%'
@@ -131,16 +145,16 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   button: {
-    backgroundColor: '#0782F9',
+    backgroundColor: '#009688',
     width: '100%',
     padding: 15,
-    borderRadius: 10,
+    borderRadius: 30,
     alignItems: 'center',
   },
   buttonOutline: {
     backgroundColor: 'white',
     marginTop: 5,
-    borderColor: '#0782F9',
+    borderColor: '#009688',
     borderWidth: 2,
   },
   buttonText: {
@@ -149,7 +163,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   buttonOutlineText: {
-    color: '#0782F9',
+    color: '#009688',
     fontWeight: '700',
     fontSize: 16,
   },

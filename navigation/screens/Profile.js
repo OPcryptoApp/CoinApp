@@ -66,12 +66,12 @@ export default function ProfileScreen({ navigation }) {
 
   const handleSignOut = () => {
     signOut(auth)
-      .then((re) => {
+      .then(() => {
         setIsSignedIn(false);
         navigation.navigate("Login");
       })
-      .catch((err) => {
-        console.log(re);
+      .catch((error) => {
+        alert(error);
       });
   };
 
