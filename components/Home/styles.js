@@ -8,7 +8,7 @@ export default StyleSheet.create({
     marginBottom: 5,
   },
   item: {
-    backgroundColor: "#3c4f5a",
+    backgroundColor: "#1f3947",
     justifyContent: "space-between",
     marginVertical: 2,
     marginHorizontal: 16,
