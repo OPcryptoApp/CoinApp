@@ -5,6 +5,7 @@ import {
   setDoc,
   deleteDoc,
   addDoc,
+  getDocs,
   collection,
   updateDoc,
   doc,
@@ -21,11 +22,23 @@ const getCoinFavoriteStatus = async coin => {
   const docRef = doc(db, auth.currentUser["uid"], "coins", "lempikolikot", coin.uuid)
   const docSnap = await getDoc(docRef)
 
+
   if (docSnap.exists()) {
     return true
   } else {
     return false
   }
+}
+
+
+const getFavoriteCoins = async () => {
+  const fcRef = collection(db, auth.currentUser["uid"], "coins", "lempikolikot");
+  const collections = await getDocs(fcRef);
+  var list = []
+  collections.forEach(collection => {
+    list.push(collection.id)
+  });
+  return list
 }
 
 const setCoinAsFavorite = async (coin) => {
@@ -51,35 +64,6 @@ const addCoinToFavorites = async (coin) => {
     name: coin.name
   })
   //Alert.alert("Alert", "Coin set as favorite.")
-}
-
-
-// TÄÄÄ EI TOIMI. Miten saa LISTATTUA documentit COLLECTIONISTA COLLECTIONIN SISÄLTÄ. Argh
-const getFavoriteCoins = async () => {
-  const favoriteList = []
-  //const docRef = doc(db, auth.currentUser["uid"], 'coins', 'lempikolikot')
-  console.log('ASDASDDAS 2')
-  //const colSnap = await db.collection(auth.currentUser["uid"]).get()
-  //const colSnap = collection(db, auth.currentUser["uid"], 'coins', 'lempikolikot')
-
-
-  //const ss = await colRef.get();
-  //console.log('ss', ss)
-  //colSnap.forEach(doc => {
-  //  console.log('docdocs')
-  //})
-  //const docSnap = await getDoc(docRef)
-
-
-  if (docSnap.exists()) {
-    docSnap.data();
-
-  } else {
-    console.log("No data found");
-  }
-
-  console.log('docSnap.data in favcoins: _ _ ', docSnap.data())
-  return favoriteList
 }
 
 const getUserCoins = async () => {
