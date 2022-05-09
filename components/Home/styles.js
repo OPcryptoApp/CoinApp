@@ -13,7 +13,7 @@ export default StyleSheet.create({
     marginVertical: 2,
     marginHorizontal: 16,
     borderRadius: 5,
-    padding: 5,
+    padding: 10,
   },
   image: {
     marginRight: 10,

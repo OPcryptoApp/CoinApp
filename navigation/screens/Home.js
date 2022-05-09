@@ -24,23 +24,8 @@ export default function HomeScreen({ navigation }) {
           Coins{" "}
         </Text>
       </View>
-      <ScrollView
-        style={{
-          maxHeight: 300,
-          backgroundColor: "blue",
-          width: "95%",
-          alignSelf: "center",
-          borderRadius: 10,
-          flex: 1,
-          backgroundColor: "#223845",
-        }}
-        contentContainerStyle={{
-          paddingTop: 20,
-          paddingBottom: 20,
-        }}
-      >
-        <Coin />
-      </ScrollView>
+
+      <Coin />
     </View>
   );
 }
