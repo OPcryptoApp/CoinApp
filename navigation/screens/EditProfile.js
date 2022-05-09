@@ -183,6 +183,7 @@ export default function EditProfileScreen({ navigation }) {
               style={[styles.textInput]}
               onChangeText={(bio) => setBio(bio)}
               value={bio}
+              multiline={true}
             />
           </View>
           <Text style={styles.inputTitle}>Phone</Text>
@@ -197,7 +198,7 @@ export default function EditProfileScreen({ navigation }) {
               value={num}
             />
           </View>
-          {/*<Text style={styles.inputTitle}>Email</Text>
+          <Text style={styles.inputTitle}>Email</Text>
           <View style={styles.action}>
             <TextInput
               placeholder="Email"
@@ -206,19 +207,9 @@ export default function EditProfileScreen({ navigation }) {
               style={[styles.textInput]}
               onChangeText={(email) => setEmail(email)}
               value={email}
+              editable={false}
             />
-        </View> */}
-          {/*<View style={styles.action}>
-          <Text size={20} />
-          <TextInput
-            placeholder="Country"
-            placeholderTextColor="#FFFFFF"
-            autoCorrect={false}
-            style={[
-              styles.textInput,
-            ]}
-          />
-          </View>*/}
+          </View>
         </View>
 
         <TouchableOpacity style={styles.commandButton} onPress={saveDoc}>
