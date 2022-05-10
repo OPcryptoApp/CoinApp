@@ -21,9 +21,10 @@ export default function Market() {
   const [favoriteCoins, setFavoriteCoins] = useState(null);
 
   useEffect(async () => {
-    const fcoins = await coinService.getFavoriteCoins()
-    setFavoriteCoins(fcoins)
-    console.log('favoriteCOins', favoriteCoins)
+
+    getFavoriteList()
+
+
     var a = numberOfCoins
     const dollarUuid = 'yhjMzLPhuIDl'
 
@@ -54,6 +55,11 @@ export default function Market() {
   }, [])
 
 
+  const getFavoriteList = async () => {
+    let fcoins = []
+    fcoins = await coinService.getFavoriteCoins()
+    setFavoriteCoins(fcoins)
+  }
 
   const DataItem = ({ rank }) => (
     <Text>            Rank: {rank}</Text>
@@ -87,7 +93,13 @@ export default function Market() {
   const renderItem = ({ item }) => (
 
 
-    < TouchableOpacity onPress={() => { navigation.navigate('CoinPageScreen', { paramCoin: item }) }}>
+    < TouchableOpacity onPress={() => {
+      getFavoriteList() // pro fix
+      navigation.navigate('CoinPageScreen', {
+        paramCoin: item,
+        getFavoriteList: getFavoriteList
+      })
+    }}>
 
 
       <View style={styles.item}>
