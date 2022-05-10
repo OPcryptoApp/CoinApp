@@ -27,12 +27,10 @@ export default function Coin(focus) {
     console.log('favoritelist', favoriteList)
     const favlist = formatFavorites(favoriteList)
     const dollarUuid = 'yhjMzLPhuIDl'
-
     if (favlist.length > 0) {
       setFavCoinsList(favlist)
       getCoinList(favlist)
     }
-
   }, [focus])
 
   //console.log('listData', listData)

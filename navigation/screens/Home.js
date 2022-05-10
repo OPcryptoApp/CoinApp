@@ -7,17 +7,9 @@ export default function HomeScreen({ navigation }) {
 
   const [focus, setFocus] = React.useState(false)
   const unsubscribe = navigation.addListener('tabPress', (e) => {
-    setFocus(!focus)
-    console.log('focus', focus)
-  });
-  /* 
-  React.useEffect(() => {
-    console.log('m___________________________________\n\n m___________________________________nnn\nm___________________________________\n')
+    setFocus(!focus) // focus vaihdos, että Coin-komponentti saa tiedon ladata kolikkolistan uudestaan
+  })
 
-    console.log('navigation', navigation.isFocused())
-
-  }, [navigation])
- */
   return (
     <View style={{ flex: 1, paddingTop: 50, backgroundColor: "#0C2432" }}>
       <View>
