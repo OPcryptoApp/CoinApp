@@ -323,9 +323,9 @@ export default function CoinPageScreen() {
             val={change}
           />
         </View>
-
-        <Text style={styles.itemTitle}>{name} owned: {Oamount * price}$ </Text>
-
+        <View>
+          <Text style={styles.itemTitle}>{name} owned: {Oamount * price}$ </Text>
+        </View>
         <View>
           {l == false && <Chart chartData={chartData} getData={getData}></Chart>}
         </View>
