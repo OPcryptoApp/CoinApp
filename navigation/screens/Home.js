@@ -28,7 +28,7 @@ export default function HomeScreen({ navigation }) {
           }}
         >
           {" "}
-          Coins{" "}
+          Favorite coins{" "}
         </Text>
       </View>
 
