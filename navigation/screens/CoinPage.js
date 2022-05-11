@@ -86,19 +86,46 @@ export default function CoinPageScreen() {
 
   // create a snapdoc to get the coin data from the database
 
-  const getOwnedCoinData = async () => {
-    const docRef = doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name);
-    const docSnap = await getDoc(docRef);
+  const initCoinData = () => {
+    const rrr = setDoc(doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name), {
+      name: name,
+      symbol: symbol,
+      price: price,
+      coinId: paramCoin.uuid,
+      amount: 0,
+    });
+  }
 
-    if (docSnap.exists()) {
-      setOName(docSnap.data().name);
-      setOAmount(docSnap.data().amount);
-      console.log(docSnap.data().name + docSnap.data().amount + 'owned');
-    } else {
-      console.log("No data found");
-    }
+  const removeNan = () => {
+    setDoc(doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name), {
+      amount: 0,
+    })
+  }
+
+  const getOwnedCoinData = () => {
+    const unsub = onSnapshot(
+      doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', paramCoin.name),
+      (doc) => {
+        if (doc.data() == undefined) {
+          initCoinData(doc)
+        } else {
+          setOName(doc.data().name);
+          setOAmount(doc.data().amount);
+        }
+      }
+    );
   };
-
+  /* 
+    setDoc(docRef, {
+      //määrä nollaan tai sitten kokko coinin poisto
+      name: name,
+      symbol: symbol,
+      price: price,
+      coinId: paramCoin.uuid,
+      amount: parseInt(Oamount) - parseInt(amount / price),
+  
+    });
+   */
   const coinCall = async () => {
     console.log('COINCALL')
     const coins = await coinService.getUserCoins()
@@ -126,10 +153,6 @@ export default function CoinPageScreen() {
     getOwnedCoinData();
 
   }, []);
-
-  useEffect(() => { setOAmount(Oamount) }, [Oamount])
-  useEffect(() => { console.log('OAMOUNT' + Oamount) }, [Oamount])
-
 
   const [chartData, setChartData] = useState()
 
@@ -211,20 +234,46 @@ export default function CoinPageScreen() {
 
   const buy = () => {
     //add coin to firebase with addDoc function
+    console.log((amount / price))
+    console.log((amount))
     const docRef = setDoc(doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name), {
       name: name,
       symbol: symbol,
       price: price,
       coinId: paramCoin.uuid,
-      amount: parseInt(Oamount) + parseInt(amount),
-      amountInUsd: amountInUsd,
+      amount: Oamount + (amount / price),
     });
   }
 
 
+  // create const handle sell, if amount would be under 0 alert user that he can't sell more than he owns, if not, sell the coin
+  const handleSell = () => {
+    console.log(parseInt(amount / price) + parseInt(Oamount / price))
+    if (amount / price > Oamount) {
+      alert('You cant sell more than you own')
+    } else {
+
+      const docRef = doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name);
+      setDoc(docRef, {
+
+        name: name,
+        symbol: symbol,
+        price: price,
+        coinId: paramCoin.uuid,
+        amount: (Oamount / price) - (amount / price),
+
+      });
+    }
+  }
+
+
+
+
+
   const sell = () => {
+    console.log(amount / price)
     //update the amount of coin in firebase
-    if (amount >= Oamount) {
+    if ((amount / price) > (Oamount / price)) {
       //delete the coin from firebase
       const docRef = doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name);
       setDoc(docRef, {
@@ -233,9 +282,7 @@ export default function CoinPageScreen() {
         symbol: symbol,
         price: price,
         coinId: paramCoin.uuid,
-        favorite: favorite,
-        amount: 0,
-        amountInUsd: amountInUsd,
+        amount: parseInt(Oamount) - parseInt(amount / price),
 
       });
 
@@ -247,9 +294,7 @@ export default function CoinPageScreen() {
         symbol: symbol,
         price: price,
         coinId: paramCoin.uuid,
-        favorite: favorite,
-        amount: Oamount - amount,
-        amountInUsd: amountInUsd,
+        amount: parseInt(Oamount) - parseInt(amount / price),
       });
 
     }
@@ -266,29 +311,24 @@ export default function CoinPageScreen() {
           <Ionicons style={styles.favorite} onPress={handleFavorite} name={'md-star'} size={30} />
           : <Ionicons style={styles.favorite} onPress={handleFavorite} name={'md-star-outline'} size={30} />
         }
-
-
         <SvgUri
           width="100"
           height="100"
           style={styles.image}
           uri={image}
         />
-
-        <Text style={styles.itemTitle}>{name} </Text>
         <View style={{ flexDirection: 'row' }}>
-
           <Text style={styles.price}>{millify(price)}$ </Text>
           <PercentageColor
             val={change}
           />
         </View>
         <View>
-
+          <Text style={styles.itemTitle}>{name} owned: {Oamount * price}$ </Text>
+        </View>
+        <View>
           {l == false && <Chart chartData={chartData} getData={getData}></Chart>}
         </View>
-
-        <Text style={styles.itemTitle}>{name} owned  {Oamount} </Text>
 
         <View style={styles.buttonContainer}>
           <Button
@@ -298,20 +338,23 @@ export default function CoinPageScreen() {
           >
             Buy
           </Button>
-
           <TextInput
-            placeholder="amount"
+            placeholder="$"
             keyboardType='numeric'
             style={[
               styles.textInput,
             ]}
-            onChangeText={(amount) => setAmount(amount)}
+            onChangeText={(amount) => {
+              amount.replace(/[^0-9]/g, '')
+              setAmount(amount)
+            }
+            }
             value={amount}
           />
           <Button
             style={styles.button}
             mode="contained"
-            onPress={sell}
+            onPress={handleSell}
           >
             Sell
           </Button>
