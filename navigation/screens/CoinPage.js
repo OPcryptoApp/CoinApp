@@ -86,16 +86,46 @@ export default function CoinPageScreen() {
 
   // create a snapdoc to get the coin data from the database
 
+  const initCoinData = () => {
+    const rrr = setDoc(doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name), {
+      name: name,
+      symbol: symbol,
+      price: price,
+      coinId: paramCoin.uuid,
+      amount: 0,
+    });
+  }
+
+  const removeNan = () => {
+    setDoc(doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name), {
+      amount: 0,
+    })
+  }
+
   const getOwnedCoinData = () => {
     const unsub = onSnapshot(
       doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', paramCoin.name),
       (doc) => {
-        setOName(doc.data().name);
-        setOAmount(doc.data().amount);
+        if (doc.data() == undefined) {
+          initCoinData(doc)
+        } else {
+          setOName(doc.data().name);
+          setOAmount(doc.data().amount);
+        }
       }
     );
   };
-
+  /* 
+    setDoc(docRef, {
+      //määrä nollaan tai sitten kokko coinin poisto
+      name: name,
+      symbol: symbol,
+      price: price,
+      coinId: paramCoin.uuid,
+      amount: parseInt(Oamount) - parseInt(amount / price),
+  
+    });
+   */
   const coinCall = async () => {
     console.log('COINCALL')
     const coins = await coinService.getUserCoins()
@@ -281,44 +311,24 @@ export default function CoinPageScreen() {
           <Ionicons style={styles.favorite} onPress={handleFavorite} name={'md-star'} size={30} />
           : <Ionicons style={styles.favorite} onPress={handleFavorite} name={'md-star-outline'} size={30} />
         }
-
-
         <SvgUri
           width="100"
           height="100"
           style={styles.image}
           uri={image}
         />
+        <View style={{ flexDirection: 'row' }}>
+          <Text style={styles.price}>{millify(price)}$ </Text>
+          <PercentageColor
+            val={change}
+          />
+        </View>
 
         <Text style={styles.itemTitle}>{name} owned: {Oamount * price}$ </Text>
 
         <View>
           {l == false && <Chart chartData={chartData} getData={getData}></Chart>}
         </View>
-
-        <View style={styles.textField}>
-          <Text style={styles.normalText}> {coins != null && coins.name} </Text>
-        </View>
-        <View>
-          {l == false && <Chart chartData={chartData} getData={getData}></Chart>}
-        </View>
-        <TextInput
-          placeholder="$"
-          keyboardType='numeric'
-          style={[
-            styles.textInput,
-          ]}
-          onChangeText={(amount) => setAmount(amount)}
-          value={amount}
-        />
-        <Button
-          style={styles.button}
-          mode="contained"
-          onPress={handleSell}
-        >
-          Sell
-        </Button>
-
 
         <View style={styles.buttonContainer}>
           <Button
@@ -328,20 +338,23 @@ export default function CoinPageScreen() {
           >
             Buy
           </Button>
-
           <TextInput
-            placeholder="amount"
+            placeholder="$"
             keyboardType='numeric'
             style={[
               styles.textInput,
             ]}
-            onChangeText={(amount) => setAmount(amount)}
+            onChangeText={(amount) => {
+              amount.replace(/[^0-9]/g, '')
+              setAmount(amount)
+            }
+            }
             value={amount}
           />
           <Button
             style={styles.button}
             mode="contained"
-            onPress={sell}
+            onPress={handleSell}
           >
             Sell
           </Button>
