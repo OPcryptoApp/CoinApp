@@ -4,6 +4,7 @@ import { SvgUri } from 'react-native-svg';
 import styles from './styles'
 import millify from 'millify';
 import { useNavigation } from "@react-navigation/native";
+import Chart from '../Graph/Chart';
 
 import axios from "axios";
 
@@ -12,7 +13,9 @@ import { COIN_API, SECRET_KEY } from "@env"
 import coinService from '../../services/coinService';
 
 
-export default function Market() {
+
+export default function Market(focus) {
+
 
   const navigation = useNavigation();
   const [numberOfCoins, setnumberOfCoins] = useState(100)
@@ -21,9 +24,10 @@ export default function Market() {
   const [favoriteCoins, setFavoriteCoins] = useState(null);
 
   useEffect(async () => {
-    const fcoins = await coinService.getFavoriteCoins()
-    setFavoriteCoins(fcoins)
-    console.log('favoriteCOins', favoriteCoins)
+
+    getFavoriteList()
+
+
     var a = numberOfCoins
     const dollarUuid = 'yhjMzLPhuIDl'
 
@@ -51,9 +55,14 @@ export default function Market() {
       console.error(error);
     });
 
-  }, [])
+  }, [focus])
 
 
+  const getFavoriteList = async () => {
+    let fcoins = []
+    fcoins = await coinService.getFavoriteCoins()
+    setFavoriteCoins(fcoins)
+  }
 
   const DataItem = ({ rank }) => (
     <Text>            Rank: {rank}</Text>
@@ -87,7 +96,13 @@ export default function Market() {
   const renderItem = ({ item }) => (
 
 
-    < TouchableOpacity onPress={() => { navigation.navigate('CoinPageScreen', { paramCoin: item }) }}>
+    < TouchableOpacity onPress={() => {
+      getFavoriteList() // pro fix
+      navigation.navigate('CoinPageScreen', {
+        paramCoin: item,
+        getFavoriteList: getFavoriteList
+      })
+    }}>
 
 
       <View style={styles.item}>
@@ -95,6 +110,7 @@ export default function Market() {
         <View style={styles.flexRow}>
 
           <View style={{ justifyContent: 'center' }}>
+
             <Text
               style={styles.name}>
               {item.name}

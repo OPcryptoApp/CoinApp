@@ -6,13 +6,14 @@ import {
   TextInput
 } from 'react-native';
 import 'react-native-gesture-handler';
-
+import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getSingleCoinData } from '../../services/requests';
 import { useRoute } from '@react-navigation/native';
 import { SvgUri } from 'react-native-svg';
 import { Button } from 'react-native-paper';
 import millify from 'millify';
+import Chart from '../../components/Graph/Chart';
 
 
 import coinService from '../../services/coinService';
@@ -36,6 +37,8 @@ import {
 
 
 export default function CoinPageScreen() {
+  const [l, setL] = useState(true);
+
   const route = useRoute();
   const [favorite, setFavorite] = useState(false);
   const [coin, setCoin] = useState(null);
@@ -57,14 +60,16 @@ export default function CoinPageScreen() {
   const [Oname, setOName] = useState('');
   const [Oamount, setOAmount] = useState('');
 
- 
-  
+
+
   const [coinName, setCoinName] = useState('');
   const {
     params: {
-      paramCoin
+      paramCoin,
+      getFavoriteList // Such pro fix
     },
   } = route;
+
 
   const fetchCoinData = async () => {
     console.log('paramcoin', paramCoin.name)
@@ -75,24 +80,24 @@ export default function CoinPageScreen() {
     setImage(fetchedCoinData.data.coin.iconUrl);
     setChange(fetchedCoinData.data.coin.change);
     setName(fetchedCoinData.data.coin.name);
+    setL(false)
   };
- 
-    // create a snapdoc to get the coin data from the database
 
-    const getOwnedCoinData = () => {
-      const unsub = onSnapshot(
+  // create a snapdoc to get the coin data from the database
+
+  const getOwnedCoinData = () => {
+    const unsub = onSnapshot(
       doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', paramCoin.name),
       (doc) => {
         setOName(doc.data().name);
-        setOAmount(doc.data().amount);       
-      }    
-      );
-    };
+        setOAmount(doc.data().amount);
+      }
+    );
+  };
 
   const coinCall = async () => {
     console.log('COINCALL')
     const coins = await coinService.getUserCoins()
-
     console.log('usercoins:', coins)
     setCoins(coins)
     return coins
@@ -102,11 +107,13 @@ export default function CoinPageScreen() {
     const unsub = onSnapshot(
       doc(db, auth.currentUser["uid"], "coins", 'lempikolikot', paramCoin.uuid),
       (doc) => {
+        var fav = false
         if (doc.data() != undefined) {
-          setFavorite(true)
+          fav = true
         } else {
-          setFavorite(false)
+          fav = false
         }
+        setFavorite(fav)
       }
     )
   }
@@ -116,15 +123,59 @@ export default function CoinPageScreen() {
 
   }, []);
 
+  const [chartData, setChartData] = useState()
+
+  // CHARTTI FUNKTIO TÄHÄ
+  const getData = async (period) => {
+
+    try {
+      //console.log('coin:', coin)
+      const coinID = 'Qwsogvtv82FCd' // Tähän propseista saatu coin ID
+
+      const options = {
+        method: 'GET',
+        url: `https://coinranking1.p.rapidapi.com/coin/${paramCoin.uuid}/history`,
+        params: { referenceCurrencyUuid: 'yhjMzLPhuIDl', timePeriod: period },
+        headers: {
+          'X-RapidAPI-Host': 'coinranking1.p.rapidapi.com',
+          'X-RapidAPI-Key': process.env.COIN_API
+        }
+      };
+
+      axios.request(options).then(function (response) {
+        //console.log("response.data.data: ", response.data.data.history);
+        const rdata = response.data.data.history
+        const list = rdata.map(d => {
+          return {
+            x: Math.round(d.timestamp),
+            y: Math.round(d.price)
+          }
+        })
+        console.log('list', list.length)
+        setChartData(list)
+      }).catch(function (error) {
+        console.error(error);
+      });
 
 
-  useEffect(() => {
+      //setData(formatData)
+      console.log('got data')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  // CHARTTI LOPPUUU
+
+
+
+  useEffect(async () => {
     fetchCoinData();
     try {
       getCoinFavorite()
     } catch (e) {
       console.log('error', e)
     }
+    getData()
   }, []);
 
   const PercentageColor = ({ val }) => {
@@ -144,50 +195,41 @@ export default function CoinPageScreen() {
       )
     }
   };
-  /* 
-    const unsub = onSnapshot(
-      doc(db, auth.currentUser["uid"], "coins"),
-      (doc) => {
-        console.log('doc', doc)
-      }
-    )
-   */
+
   const handleFavorite = async () => {
     coinService.setCoinAsFavorite(paramCoin)
-    //const favoriteStatus = await coinService.getCoinFavoriteStatus(paramCoin) // COIN TÄHTEÄ EI VIELÄ MUUTETA OIKEIN
-    //console.log('favoriteStautus', favoriteStatus)
-    //setFavorite(favoriteStatus)
+    getFavoriteList() // such amazing pro fix for updating favorite list
   };
 
   const buy = () => {
     //add coin to firebase with addDoc function
-    console.log((amount/price))
+    console.log((amount / price))
     console.log((amount))
     const docRef = setDoc(doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name), {
       name: name,
       symbol: symbol,
       price: price,
       coinId: paramCoin.uuid,
-      amount: Oamount + (amount/price),
+      amount: Oamount + (amount / price),
     });
   }
 
 
   // create const handle sell, if amount would be under 0 alert user that he can't sell more than he owns, if not, sell the coin
   const handleSell = () => {
-    console.log(parseInt(amount/price) + parseInt(Oamount/price))
-    if (amount/price > Oamount) {
+    console.log(parseInt(amount / price) + parseInt(Oamount / price))
+    if (amount / price > Oamount) {
       alert('You cant sell more than you own')
     } else {
-     
+
       const docRef = doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name);
       setDoc(docRef, {
-       
+
         name: name,
         symbol: symbol,
         price: price,
         coinId: paramCoin.uuid,
-        amount:(Oamount/price) - (amount/price),
+        amount: (Oamount / price) - (amount / price),
 
       });
     }
@@ -198,9 +240,9 @@ export default function CoinPageScreen() {
 
 
   const sell = () => {
-    console.log(amount/price)
+    console.log(amount / price)
     //update the amount of coin in firebase
-    if ((amount/price) > (Oamount/price)) {
+    if ((amount / price) > (Oamount / price)) {
       //delete the coin from firebase
       const docRef = doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name);
       setDoc(docRef, {
@@ -209,7 +251,7 @@ export default function CoinPageScreen() {
         symbol: symbol,
         price: price,
         coinId: paramCoin.uuid,
-        amount: parseInt(Oamount) - parseInt(amount/price),
+        amount: parseInt(Oamount) - parseInt(amount / price),
 
       });
 
@@ -221,12 +263,13 @@ export default function CoinPageScreen() {
         symbol: symbol,
         price: price,
         coinId: paramCoin.uuid,
-        amount: parseInt(Oamount) - parseInt(amount/price),
+        amount: parseInt(Oamount) - parseInt(amount / price),
       });
 
     }
   }
-  
+
+
 
 
   return (
@@ -253,8 +296,16 @@ export default function CoinPageScreen() {
           val={change}
         />
       </View>
-   
-      <Text style={styles.itemTitle}>{name} owned: {Oamount*price}$ </Text>
+
+      <Text style={styles.itemTitle}>{name} owned: {Oamount * price}$ </Text>
+      <View>
+
+        {l == false && <Chart chartData={chartData} getData={getData}></Chart>}
+      </View>
+
+      <View style={styles.textField}>
+        <Text style={styles.normalText}> {coins != null && coins.name} </Text>
+      </View>
 
       <View style={styles.buttonContainer}>
         <Button

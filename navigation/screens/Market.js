@@ -2,13 +2,19 @@ import * as React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import Market from "../../components/Market";
 
-export default function MarketScreen() {
+export default function MarketScreen({ navigation }) {
+
+  const [focus, setFocus] = React.useState(false)
+  const unsubscribe = navigation.addListener('focus', (e) => {
+    setFocus(!focus) // focus vaihdos, että Coin-komponentti saa tiedon ladata kolikkolistan uudestaan
+  })
+
   return (
     <View style={styles.container}>
       <View>
         <Text style={styles.title}>All coins</Text>
       </View>
-      <Market />
+      <Market focus={focus} />
     </View>
   );
 }
@@ -16,7 +22,6 @@ export default function MarketScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: 10,
     backgroundColor: "#0C2432",
     paddingTop: 40,
   },

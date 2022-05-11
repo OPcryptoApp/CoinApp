@@ -1,43 +1,63 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, FlatList } from 'react-native';
+import { View, Text, Image, FlatList, ScrollView } from 'react-native';
 import styles from './styles'
 import millify from 'millify';
 import axios from "axios";
 import { SvgUri } from 'react-native-svg';
+import { TouchableOpacity } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
+import Chart from '../Graph/Chart';
 import coinService from '../../services/coinService';
 
 // import .env tiedostosta api-avaimet ja muut, jotka ei kuulu githubiin
 import { COIN_API, SECRET_KEY } from "@env"
+import { Button } from 'react-native-paper';
 
-const storeData = async (value) => {
-  console.log('value', value)
-  try {
-    await AsyncStorage.setItem('@storage_Key', value)
-  } catch (e) {
-    console.log('Saving Error')
-  }
-}
-
-export default function Coin() {
+export default function Coin(focus) {
 
   const [listData, setListData] = useState([])
+  const [favCoinsList, setFavCoinsList] = useState('')
+  const [loading, setLoading] = useState(true)
+
+  const formatFavorites = (favoriteList) => {
+    var list = ""
+    favoriteList.map((f, i) => {
+      list = (`${list}&uuids[${i}]=${f}`)
+    })
+    return list
+  }
 
   useEffect(async () => {
     const favoriteList = await coinService.getFavoriteCoins();
     console.log('favoritelist', favoriteList)
+    const favlist = formatFavorites(favoriteList)
 
+    if (favlist.length > 0) {
+      setFavCoinsList(favlist)
+      console.log('favCoinsList', favCoinsList)
+      getCoinList(favlist)
+    } else {
+      setLoading(true)
+    }
+  }, [focus])
+
+  //console.log('listData', listData)
+
+  const getCoinList = (favlist) => {
     const dollarUuid = 'yhjMzLPhuIDl'
-
     axios.request({
       method: 'GET',
-      url: 'https://coinranking1.p.rapidapi.com/coins',
+      //url: 'https://coinranking1.p.rapidapi.com/coins',
+      //url: `https://coinranking1.p.rapidapi.com/coins?referenceCurrencyUuid=yhjMzLPhuIDl&uuids[0]=9K7m6ufraZ6gh&uuids[1]=HIVsRcGKkPFtW&uuids[2]=Qwsogvtv82FCd&uuids[3]=WcwrkfNI4FUAe&uuids[4]=razxDUgYGNAdQ`,
+      url: `https://coinranking1.p.rapidapi.com/coins?referenceCurrencyUuid=yhjMzLPhuIDl${favlist}`,
       params: {
-        referenceCurrencyUuid: dollarUuid,
-        timePeriod: '24h',
-        tiers: '1',
+        //referenceCurrencyUuid: dollarUuid,
+        //timePeriod: '24h',
+        //'uuids[]': 'Qwsogvtv82FCd',
+        //'uuids[]': 'razxDUgYGNAdQ', 
         orderBy: 'marketCap',
         orderDirection: 'desc',
-        limit: '4',
+        limit: '50',
         offset: '0'
       },
       headers: {
@@ -46,16 +66,12 @@ export default function Coin() {
         'x-rapidapi-key': process.env.COIN_API
       }
     }).then(function (response) {
-      //console.log("response data", response.data);s
       setListData(response.data.data.coins)
     }).catch(function (error) {
       console.error(error);
     });
-
-  }, [])
-
-  //console.log('listData', listData)
-
+    setLoading(false)
+  }
 
 
 
@@ -81,51 +97,63 @@ export default function Coin() {
     }
   };
 
+  const navigation = useNavigation();
 
   const renderItem = ({ item }) => (
 
-    <View style={styles.item}>
+    < TouchableOpacity onPress={() => { navigation.navigate('CoinPageScreen', { paramCoin: item }) }}>
+      <View style={styles.item}>
 
-      <View style={styles.flexRow}>
-        <SvgUri
-          width="30"
-          height="30"
-          style={styles.image}
-          uri={item.iconUrl}
-        />
-        <View style={{ justifyContent: 'center' }}>
-          <Text
-            style={styles.name}>
-            {item.name}
-          </Text>
-          <Text style={styles.sub}>{item.symbol}</Text>
-        </View>
-        <View style={styles.left}>
-        </View>
-        <View style={styles.left}>
-          <View style={styles.left}>
-            <Text style={styles.price}> ${millify(item.price)}</Text>
-          </View>
-          <PercentageColor
-            val={item.change}
+        <View style={styles.flexRow}>
+          <SvgUri
+            width="30"
+            height="30"
+            style={styles.image}
+            uri={item.iconUrl}
           />
+          <View style={{ justifyContent: 'center' }}>
+            <Text
+              style={styles.name}>
+              {item.name}
+            </Text>
+            <Text style={styles.sub}>{item.symbol}</Text>
+          </View>
+          <View style={styles.left}>
+          </View>
+          <View style={styles.left}>
+            <View style={styles.left}>
+              <Text style={styles.price}> ${millify(item.price)}</Text>
+            </View>
+            <PercentageColor
+              val={item.change}
+            />
+          </View>
         </View>
-      </View>
 
-    </View>
+      </View>
+    </TouchableOpacity>
   )
 
   return (
 
     <View style={styles.container}>
-
-      <FlatList
-        data={listData}
-        renderItem={renderItem}
-        keyExtractor={(item, i) => 'key' + i}
-
-      />
-
+      {/* FIX HERE SOME STYLING / ORIENTATION ERROR POPS UP HERE */}
+      {/* 
+      <ScrollView> 
+         */}
+      {!loading ?
+        <FlatList
+          data={listData}
+          renderItem={renderItem}
+          keyExtractor={(item, i) => 'key' + i}
+        />
+        : <Text style={styles.name}>
+          See your favorite coins here
+        </Text>
+      }
+      {/* 
+      </ScrollView>
+       */}
     </View>
 
 
