@@ -4,7 +4,7 @@
 <br />
 <div align="center">
   <a href="images/logo.png">
-    <img src="images/logo.png" alt="Logo" width="400" height="200">
+    <img src="images/logo.png" alt="Logo" width="400" height="400">
   </a>
 
   <h3 align="center">KryptoApp - ohjelmistoprojekti 2 työ</h3>
@@ -16,7 +16,7 @@
   </p>
 
   <a href="images/Screenshot.png">
-    <img src="images/Screenshot.png" alt="Logo" width="400" height="400">
+    <img src="images/Screenshot.png" alt="Logo" width="400" height="800">
   </a>
 </div>
 
