@@ -22,7 +22,6 @@ export default function MarketScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: 10,
     backgroundColor: "#0C2432",
     paddingTop: 40,
   },

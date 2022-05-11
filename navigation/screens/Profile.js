@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Alert,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import {
@@ -16,6 +16,7 @@ import {
   Text,
   TouchableRipple,
 } from "react-native-paper";
+import { Divider } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 //import styles from "../../components/Profile/styles";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -95,7 +96,12 @@ export default function ProfileScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       {/* <View style={styles.userInfoSection}> */}
-      <ScrollView style={{ margin: 20 }}>
+      <ScrollView
+        style={{
+          paddingLeft: 20,
+          paddingRight: 20,
+        }}
+      >
         <Text
           style={{
             color: "#d1e0e8",
@@ -146,6 +152,9 @@ export default function ProfileScreen({ navigation }) {
             </Title>
             <Caption style={styles.caption}>@{username}</Caption>
           </View>
+          <View style={{ marginBottom: 10, marginTop: 10, margin: 5 }}>
+            <Divider color="#3b5563" />
+          </View>
 
           <View>
             {/* <View style={styles.userInfoSection}> */}
@@ -154,17 +163,6 @@ export default function ProfileScreen({ navigation }) {
               <Text style={{ color: "#d1e0e8", marginTop: 20, marginLeft: 7 }}>
                 {bio}
               </Text>
-            </View>
-
-            <View style={styles.infoBoxWrapper}>
-              <View style={styles.infoBox}>
-                <Title style={styles.text}>$2500</Title>
-                <Caption style={styles.caption}>Weekly</Caption>
-              </View>
-              <View style={styles.infoBox}>
-                <Title style={styles.text}>8</Title>
-                <Caption style={styles.caption}>Currencies</Caption>
-              </View>
             </View>
           </View>
           {/* <View style={styles.logout}> */}
@@ -208,6 +206,10 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: "row",
     marginBottom: 10,
+    backgroundColor: "#1f3947",
+    marginTop: 10,
+    paddingBottom: 20,
+    borderRadius: 10,
   },
   infoBoxWrapper: {
     borderBottomColor: "#dddddd",
@@ -242,6 +244,7 @@ const styles = StyleSheet.create({
     //flex: 1,
     justifyContent: "center",
     //alignItems: 'center'
+    marginBottom: 20,
   },
   button: {
     backgroundColor: "#0782F9",
