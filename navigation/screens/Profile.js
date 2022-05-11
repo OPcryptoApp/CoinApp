@@ -96,7 +96,12 @@ export default function ProfileScreen({ navigation }) {
   return (
     <SafeAreaView style={styles.container}>
       {/* <View style={styles.userInfoSection}> */}
-      <ScrollView style={{ margin: 20 }}>
+      <ScrollView
+        style={{
+          paddingLeft: 20,
+          paddingRight: 20,
+        }}
+      >
         <Text
           style={{
             color: "#d1e0e8",
@@ -239,6 +244,7 @@ const styles = StyleSheet.create({
     //flex: 1,
     justifyContent: "center",
     //alignItems: 'center'
+    marginBottom: 20,
   },
   button: {
     backgroundColor: "#0782F9",
