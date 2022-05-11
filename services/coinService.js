@@ -42,6 +42,19 @@ const getFavoriteCoins = async () => {
   return list
 }
 
+getOwnedCoins = async () => {
+  const fcRef = collection(db, auth.currentUser["uid"], "ownedCoins", "coin");
+  const collections = await getDocs(fcRef);
+  var list = []
+
+  collections.forEach(collection => {
+    //console.log('collection name', collection.data().amount > 0)
+    collection.data().amount > 0 && list.push(collection.data())
+
+  });
+  return list
+}
+
 const setCoinAsFavorite = async (coin) => {
 
   console.log('COIN DATA in coinService', coin.name)
@@ -84,6 +97,6 @@ const getUserCoins = async () => {
 
 
 
-const coinService = { setCoinAsFavorite, getUserCoins, getCoinFavoriteStatus, getFavoriteCoins }
+const coinService = { setCoinAsFavorite, getUserCoins, getCoinFavoriteStatus, getFavoriteCoins, getOwnedCoins }
 
 export default coinService

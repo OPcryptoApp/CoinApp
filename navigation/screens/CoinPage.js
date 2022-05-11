@@ -87,7 +87,7 @@ export default function CoinPageScreen() {
   // create a snapdoc to get the coin data from the database
 
   const initCoinData = () => {
-    const rrr = setDoc(doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name), {
+    const rrr = setDoc(doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', paramCoin.name), {
       name: name,
       symbol: symbol,
       price: price,
@@ -97,7 +97,7 @@ export default function CoinPageScreen() {
   }
 
   const removeNan = () => {
-    setDoc(doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name), {
+    setDoc(doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', paramCoin.name), {
       amount: 0,
     })
   }
@@ -241,12 +241,12 @@ export default function CoinPageScreen() {
     //if (typeof (Oamount) != 'number') setOAmount(0)
     console.log('OMAOUTN', Oamount)
 
-    const docRef = setDoc(doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name), {
+    const docRef = setDoc(doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', paramCoin.name), {
       name: name,
       symbol: symbol,
       price: parseFloat(price),
       coinId: paramCoin.uuid,
-      amount: typeof (Oamount) == 'number' ? parseFloat(Oamount) / parseFloat(price) + (parseFloat(amount) / parseFloat(price)) : 0.0,
+      amount: (parseFloat(Oamount)) + (parseFloat(amount) / parseFloat(price)) //typeof (Oamount) == 'number' ? parseFloat(Oamount) / parseFloat(price) + (parseFloat(amount) / parseFloat(price)) : 0.0,
     });
   }
 
@@ -260,13 +260,13 @@ export default function CoinPageScreen() {
     if (parseFloat(amount) / parseFloat(price) > parseFloat(Oamount)) {
       alert('You cant sell more than you own')
     } else {
-      const docRef = doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name);
+      const docRef = doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', paramCoin.name);
       setDoc(docRef, {
         name: name,
         symbol: symbol,
         price: parseFloat(price),
         coinId: paramCoin.uuid,
-        amount: ((parseFloat(Oamount) / parseFloat(price)) - (parseFloat(amount) / parseFloat(price))),
+        amount: (parseFloat(Oamount)) - (parseFloat(amount) / parseFloat(price)),
 
       });
     }
@@ -281,7 +281,7 @@ export default function CoinPageScreen() {
     //update the amount of coin in firebase
     if ((amount / price) > (Oamount / price)) {
       //delete the coin from firebase
-      const docRef = doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name);
+      const docRef = doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', paramCoin.name);
       setDoc(docRef, {
         //määrä nollaan tai sitten kokko coinin poisto
         name: name,
@@ -294,7 +294,7 @@ export default function CoinPageScreen() {
 
     } else {
       //amountin päivitys, Oamount = firebasecoinin määrä - valittu amount
-      const docRef = doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name);
+      const docRef = doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', paramCoin.name);
       setDoc(docRef, {
         name: name,
         symbol: symbol,
@@ -330,7 +330,7 @@ export default function CoinPageScreen() {
           />
         </View>
         <View>
-          <Text style={styles.itemTitle}>{name} owned: {Oamount * price}$ </Text>
+          <Text style={styles.itemTitle}>{name} owned: {(Oamount * price).toFixed(2)} $ </Text>
         </View>
         <View>
           {l == false && <Chart chartData={chartData} getData={getData}></Chart>}

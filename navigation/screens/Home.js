@@ -1,6 +1,5 @@
 import * as React from "react";
 import { View, Text, Button, ScrollView } from "react-native";
-import PortfolioWindow from "../../components/Portfolio/PortfolioWindow";
 import Coin from "../../components/Home/coin";
 
 
@@ -14,7 +13,14 @@ export default function HomeScreen({ navigation }) {
   return (
     <View style={{ flex: 1, paddingTop: 50, backgroundColor: "#0C2432" }}>
       <View>
-        <PortfolioWindow />
+        <Text style={{
+          alignSelf: "center",
+          fontSize: 24,
+          paddingBottom: 30,
+          fontWeight: 'bold',
+          color: 'white',
+          paddingTop: 20
+        }}>KryptoApp</Text>
       </View>
 
       <View>
