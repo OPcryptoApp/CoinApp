@@ -5,7 +5,7 @@ import {
   Text,
 } from 'react-native';
 import 'react-native-gesture-handler';
-
+import axios from 'axios';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { getSingleCoinData } from '../../services/requests';
 import { useRoute } from '@react-navigation/native';
@@ -59,6 +59,7 @@ export default function CoinPageScreen() {
     },
   } = route;
 
+
   const fetchCoinData = async () => {
     console.log('paramcoin', paramCoin.name)
     fetchedCoinData = await getSingleCoinData(paramCoin.uuid);
@@ -68,6 +69,7 @@ export default function CoinPageScreen() {
     setImage(fetchedCoinData.data.coin.iconUrl);
     setChange(fetchedCoinData.data.coin.change);
     setName(fetchedCoinData.data.coin.name);
+    setL(false)
   };
 
 
@@ -94,6 +96,49 @@ export default function CoinPageScreen() {
     )
   }
 
+  const [chartData, setChartData] = useState()
+
+  // CHARTTI FUNKTIO TÄHÄ
+  const getData = async (period) => {
+
+    try {
+      //console.log('coin:', coin)
+      const coinID = 'Qwsogvtv82FCd' // Tähän propseista saatu coin ID
+
+      const options = {
+        method: 'GET',
+        url: `https://coinranking1.p.rapidapi.com/coin/${paramCoin.uuid}/history`,
+        params: { referenceCurrencyUuid: 'yhjMzLPhuIDl', timePeriod: period },
+        headers: {
+          'X-RapidAPI-Host': 'coinranking1.p.rapidapi.com',
+          'X-RapidAPI-Key': process.env.COIN_API
+        }
+      };
+
+      axios.request(options).then(function (response) {
+        //console.log("response.data.data: ", response.data.data.history);
+        const rdata = response.data.data.history
+        const list = rdata.map(d => {
+          return {
+            x: Math.round(d.timestamp),
+            y: Math.round(d.price)
+          }
+        })
+        console.log('list', list.length)
+        setChartData(list)
+      }).catch(function (error) {
+        console.error(error);
+      });
+
+
+      //setData(formatData)
+      console.log('got data')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  // CHARTTI LOPPUUU
+
 
 
   useEffect(async () => {
@@ -103,6 +148,7 @@ export default function CoinPageScreen() {
     } catch (e) {
       console.log('error', e)
     }
+    getData()
   }, []);
 
   const PercentageColor = ({ val }) => {
@@ -158,7 +204,7 @@ export default function CoinPageScreen() {
       </View>
       <View>
 
-        {l == false && <Chart name={fetchedCoinData}></Chart>}
+        {l == false && <Chart chartData={chartData} getData={getData}></Chart>}
       </View>
 
       <View style={styles.textField}>

@@ -101,7 +101,7 @@ export default function Coin(focus) {
 
   const renderItem = ({ item }) => (
 
-    < TouchableOpacity onPress={() => { navigation.navigate('CoinPageScreen', { coinId: item.uuid }) }}>
+    < TouchableOpacity onPress={() => { navigation.navigate('CoinPageScreen', { paramCoin: item }) }}>
       <View style={styles.item}>
 
         <View style={styles.flexRow}>
