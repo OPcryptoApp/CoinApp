@@ -51,7 +51,8 @@ export default function CoinPageScreen() {
   const [coinName, setCoinName] = useState('');
   const {
     params: {
-      paramCoin
+      paramCoin,
+      getFavoriteList // Such pro fix
     },
   } = route;
 
@@ -70,7 +71,6 @@ export default function CoinPageScreen() {
   const coinCall = async () => {
     console.log('COINCALL')
     const coins = await coinService.getUserCoins()
-
     console.log('usercoins:', coins)
     setCoins(coins)
     return coins
@@ -80,11 +80,13 @@ export default function CoinPageScreen() {
     const unsub = onSnapshot(
       doc(db, auth.currentUser["uid"], "coins", 'lempikolikot', paramCoin.uuid),
       (doc) => {
+        var fav = false
         if (doc.data() != undefined) {
-          setFavorite(true)
+          fav = true
         } else {
-          setFavorite(false)
+          fav = false
         }
+        setFavorite(fav)
       }
     )
   }
@@ -117,19 +119,10 @@ export default function CoinPageScreen() {
       )
     }
   };
-  /* 
-    const unsub = onSnapshot(
-      doc(db, auth.currentUser["uid"], "coins"),
-      (doc) => {
-        console.log('doc', doc)
-      }
-    )
-   */
+
   const handleFavorite = async () => {
     coinService.setCoinAsFavorite(paramCoin)
-    //const favoriteStatus = await coinService.getCoinFavoriteStatus(paramCoin) // COIN TÄHTEÄ EI VIELÄ MUUTETA OIKEIN
-    //console.log('favoriteStautus', favoriteStatus)
-    //setFavorite(favoriteStatus)
+    getFavoriteList() // such amazing pro fix for updating favorite list
   };
 
 

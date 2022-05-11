@@ -4,6 +4,13 @@ import PortfolioWindow from "../../components/Portfolio/PortfolioWindow";
 import Coin from "../../components/Home/coin";
 
 export default function HomeScreen({ navigation }) {
+
+  const [focus, setFocus] = React.useState(false)
+  const unsubscribe = navigation.addListener('tabPress', (e) => {
+    console.log('e', e)
+    setFocus(!focus) // focus vaihdos, että Coin-komponentti saa tiedon ladata kolikkolistan uudestaan
+  })
+
   return (
     <View style={{ flex: 1, paddingTop: 50, backgroundColor: "#0C2432" }}>
       <View>
@@ -25,7 +32,7 @@ export default function HomeScreen({ navigation }) {
         </Text>
       </View>
 
-      <Coin />
+      <Coin focus={focus} />
     </View>
   );
 }
