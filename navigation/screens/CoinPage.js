@@ -91,7 +91,7 @@ export default function CoinPageScreen() {
 
 
 
-  useEffect(() => {
+  useEffect(async () => {
     fetchCoinData();
     try {
       getCoinFavorite()
