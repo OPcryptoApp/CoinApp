@@ -3,7 +3,8 @@ import {
   StyleSheet,
   View,
   Text,
-  TextInput
+  TextInput,
+  ScrollView
 } from 'react-native';
 import 'react-native-gesture-handler';
 import axios from 'axios';
@@ -275,47 +276,32 @@ export default function CoinPageScreen() {
   return (
 
     <View style={styles.container}>
-      {favorite ?
-        <Ionicons style={styles.favorite} onPress={handleFavorite} name={'md-star'} size={30} />
-        : <Ionicons style={styles.favorite} onPress={handleFavorite} name={'md-star-outline'} size={30} />
-      }
+      <ScrollView style={styles.scroll}>
+        {favorite ?
+          <Ionicons style={styles.favorite} onPress={handleFavorite} name={'md-star'} size={30} />
+          : <Ionicons style={styles.favorite} onPress={handleFavorite} name={'md-star-outline'} size={30} />
+        }
 
 
-      <SvgUri
-        width="100"
-        height="100"
-        style={styles.image}
-        uri={image}
-      />
-
-      <Text style={styles.itemTitle}>{name} </Text>
-      <View style={{ flexDirection: 'row' }}>
-
-        <Text style={styles.price}>{millify(price)}$ </Text>
-        <PercentageColor
-          val={change}
+        <SvgUri
+          width="100"
+          height="100"
+          style={styles.image}
+          uri={image}
         />
-      </View>
 
-      <Text style={styles.itemTitle}>{name} owned: {Oamount * price}$ </Text>
-      <View>
+        <Text style={styles.itemTitle}>{name} owned: {Oamount * price}$ </Text>
 
-        {l == false && <Chart chartData={chartData} getData={getData}></Chart>}
-      </View>
+        <View>
+          {l == false && <Chart chartData={chartData} getData={getData}></Chart>}
+        </View>
 
-      <View style={styles.textField}>
-        <Text style={styles.normalText}> {coins != null && coins.name} </Text>
-      </View>
-
-      <View style={styles.buttonContainer}>
-        <Button
-          style={styles.button}
-          mode="contained"
-          onPress={buy}
-        >
-          Buy
-        </Button>
-
+        <View style={styles.textField}>
+          <Text style={styles.normalText}> {coins != null && coins.name} </Text>
+        </View>
+        <View>
+          {l == false && <Chart chartData={chartData} getData={getData}></Chart>}
+        </View>
         <TextInput
           placeholder="$"
           keyboardType='numeric'
@@ -332,9 +318,36 @@ export default function CoinPageScreen() {
         >
           Sell
         </Button>
-      </View>
 
 
+        <View style={styles.buttonContainer}>
+          <Button
+            style={styles.button}
+            mode="contained"
+            onPress={buy}
+          >
+            Buy
+          </Button>
+
+          <TextInput
+            placeholder="amount"
+            keyboardType='numeric'
+            style={[
+              styles.textInput,
+            ]}
+            onChangeText={(amount) => setAmount(amount)}
+            value={amount}
+          />
+          <Button
+            style={styles.button}
+            mode="contained"
+            onPress={sell}
+          >
+            Sell
+          </Button>
+        </View>
+
+      </ScrollView>
     </View >
 
   );
@@ -345,7 +358,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    padding: 30,
+    paddingLeft: "1%",
     backgroundColor: '#0C2432',
 
   },
@@ -459,4 +472,7 @@ const styles = StyleSheet.create({
     margin: 5,
     borderRadius: 20,
   },
+  scroll: {
+    //width: "115%",
+  }
 });
