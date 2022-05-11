@@ -4,10 +4,14 @@ import styles from './styles'
 import millify from 'millify';
 import axios from "axios";
 import { SvgUri } from 'react-native-svg';
+import { TouchableOpacity } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
+import Chart from '../Graph/Chart';
 import coinService from '../../services/coinService';
 
 // import .env tiedostosta api-avaimet ja muut, jotka ei kuulu githubiin
 import { COIN_API, SECRET_KEY } from "@env"
+import { Button } from 'react-native-paper';
 
 export default function Coin(focus) {
 
@@ -93,38 +97,41 @@ export default function Coin(focus) {
     }
   };
 
+  const navigation = useNavigation();
 
   const renderItem = ({ item }) => (
 
-    <View style={styles.item}>
+    < TouchableOpacity onPress={() => { navigation.navigate('CoinPageScreen', { paramCoin: item }) }}>
+      <View style={styles.item}>
 
-      <View style={styles.flexRow}>
-        <SvgUri
-          width="30"
-          height="30"
-          style={styles.image}
-          uri={item.iconUrl}
-        />
-        <View style={{ justifyContent: 'center' }}>
-          <Text
-            style={styles.name}>
-            {item.name}
-          </Text>
-          <Text style={styles.sub}>{item.symbol}</Text>
-        </View>
-        <View style={styles.left}>
-        </View>
-        <View style={styles.left}>
-          <View style={styles.left}>
-            <Text style={styles.price}> ${millify(item.price)}</Text>
-          </View>
-          <PercentageColor
-            val={item.change}
+        <View style={styles.flexRow}>
+          <SvgUri
+            width="30"
+            height="30"
+            style={styles.image}
+            uri={item.iconUrl}
           />
+          <View style={{ justifyContent: 'center' }}>
+            <Text
+              style={styles.name}>
+              {item.name}
+            </Text>
+            <Text style={styles.sub}>{item.symbol}</Text>
+          </View>
+          <View style={styles.left}>
+          </View>
+          <View style={styles.left}>
+            <View style={styles.left}>
+              <Text style={styles.price}> ${millify(item.price)}</Text>
+            </View>
+            <PercentageColor
+              val={item.change}
+            />
+          </View>
         </View>
-      </View>
 
-    </View>
+      </View>
+    </TouchableOpacity>
   )
 
   return (

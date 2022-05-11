@@ -36,6 +36,7 @@ const getFavoriteCoins = async () => {
   const collections = await getDocs(fcRef);
   var list = []
   collections.forEach(collection => {
+    //console.log('collection name', collection.ref)
     list.push(collection.id)
   });
   return list

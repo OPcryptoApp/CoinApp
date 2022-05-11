@@ -3,11 +3,11 @@ import { View, Text, Button, ScrollView } from "react-native";
 import PortfolioWindow from "../../components/Portfolio/PortfolioWindow";
 import Coin from "../../components/Home/coin";
 
+
 export default function HomeScreen({ navigation }) {
 
   const [focus, setFocus] = React.useState(false)
-  const unsubscribe = navigation.addListener('tabPress', (e) => {
-    console.log('e', e)
+  const unsubscribe = navigation.addListener('focus', (e) => {
     setFocus(!focus) // focus vaihdos, että Coin-komponentti saa tiedon ladata kolikkolistan uudestaan
   })
 

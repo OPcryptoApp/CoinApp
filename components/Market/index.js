@@ -4,6 +4,7 @@ import { SvgUri } from 'react-native-svg';
 import styles from './styles'
 import millify from 'millify';
 import { useNavigation } from "@react-navigation/native";
+import Chart from '../Graph/Chart';
 
 import axios from "axios";
 
@@ -12,7 +13,9 @@ import { COIN_API, SECRET_KEY } from "@env"
 import coinService from '../../services/coinService';
 
 
-export default function Market() {
+
+export default function Market(focus) {
+
 
   const navigation = useNavigation();
   const [numberOfCoins, setnumberOfCoins] = useState(100)
@@ -52,7 +55,7 @@ export default function Market() {
       console.error(error);
     });
 
-  }, [])
+  }, [focus])
 
 
   const getFavoriteList = async () => {
@@ -107,6 +110,7 @@ export default function Market() {
         <View style={styles.flexRow}>
 
           <View style={{ justifyContent: 'center' }}>
+
             <Text
               style={styles.name}>
               {item.name}
