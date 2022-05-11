@@ -13,6 +13,7 @@ export default function Coin(focus) {
 
   const [listData, setListData] = useState([])
   const [favCoinsList, setFavCoinsList] = useState('')
+  const [loading, setLoading] = useState(true)
 
   const formatFavorites = (favoriteList) => {
     var list = ""
@@ -26,16 +27,20 @@ export default function Coin(focus) {
     const favoriteList = await coinService.getFavoriteCoins();
     console.log('favoritelist', favoriteList)
     const favlist = formatFavorites(favoriteList)
-    const dollarUuid = 'yhjMzLPhuIDl'
+
     if (favlist.length > 0) {
       setFavCoinsList(favlist)
+      console.log('favCoinsList', favCoinsList)
       getCoinList(favlist)
+    } else {
+      setLoading(true)
     }
   }, [focus])
 
   //console.log('listData', listData)
 
   const getCoinList = (favlist) => {
+    const dollarUuid = 'yhjMzLPhuIDl'
     axios.request({
       method: 'GET',
       //url: 'https://coinranking1.p.rapidapi.com/coins',
@@ -61,6 +66,7 @@ export default function Coin(focus) {
     }).catch(function (error) {
       console.error(error);
     });
+    setLoading(false)
   }
 
 
@@ -128,13 +134,13 @@ export default function Coin(focus) {
       {/* 
       <ScrollView> 
          */}
-      {favCoinsList.length > 0 ?
+      {!loading ?
         <FlatList
           data={listData}
           renderItem={renderItem}
           keyExtractor={(item, i) => 'key' + i}
         />
-        : <Text>
+        : <Text style={styles.name}>
           See your favorite coins here
         </Text>
       }
