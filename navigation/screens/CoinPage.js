@@ -14,7 +14,6 @@ import { SvgUri } from 'react-native-svg';
 import { Button } from 'react-native-paper';
 import millify from 'millify';
 
-import Chart from '../../components/Graph/Chart';
 
 import coinService from '../../services/coinService';
 
@@ -241,10 +240,6 @@ export default function CoinPageScreen() {
       </View>
 
       <Text style={styles.itemTitle}>{name} owned  {Oamount} </Text>
-
-
-      <Chart name={paramCoin.name} />
-
 
       <View style={styles.buttonContainer}>
         <Button
