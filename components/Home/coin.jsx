@@ -1,76 +1,63 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Image, FlatList } from 'react-native';
+import { View, Text, Image, FlatList, ScrollView } from 'react-native';
 import styles from './styles'
 import millify from 'millify';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import { SvgUri } from 'react-native-svg';
 import { TouchableOpacity } from 'react-native';
 import { useNavigation } from "@react-navigation/native";
 import Chart from '../Graph/Chart';
+import coinService from '../../services/coinService';
 
 // import .env tiedostosta api-avaimet ja muut, jotka ei kuulu githubiin
 import { COIN_API, SECRET_KEY } from "@env"
 import { Button } from 'react-native-paper';
 
-//import 'dotenv/config'
-//require('dotenv').config()
+export default function Coin(focus) {
 
-
-const storeData = async (value) => {
-  console.log('value', value)
-  try {
-    await AsyncStorage.setItem('@storage_Key', value)
-  } catch (e) {
-    console.log('Saving Error')
-  }
-}
-
-export default function Coin() {
-
-  const [asyncNumber, setAsyncNumber] = useState(5)
   const [listData, setListData] = useState([])
-  //const [coinListData, setCoinListData] = useState([])
+  const [favCoinsList, setFavCoinsList] = useState('')
+  const [loading, setLoading] = useState(true)
 
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('@storage_Key')
-      if (value !== null) {
-        console.log('value get', parseInt(value))
-        // value previously stored
-        setAsyncNumber(parseInt(value))
-      }
-    } catch (e) {
-      // error reading value
-    }
+  const formatFavorites = (favoriteList) => {
+    var list = ""
+    favoriteList.map((f, i) => {
+      list = (`${list}&uuids[${i}]=${f}`)
+    })
+    return list
   }
 
   useEffect(async () => {
-    var a = asyncNumber
-    console.log(process.env)
-    console.log("response data", COIN_API);
-    try {
-      const value = await AsyncStorage.getItem('@storage_Key')
-      if (value !== null) {
-        console.log('value get', parseInt(value))
-        // value previously stored
-        setAsyncNumber(parseInt(value))
-        a = parseInt(value)
-      }
-    } catch (e) {
-      // error reading value
-    }
+    const favoriteList = await coinService.getFavoriteCoins();
+    console.log('favoritelist', favoriteList)
+    const favlist = formatFavorites(favoriteList)
 
+    if (favlist.length > 0) {
+      setFavCoinsList(favlist)
+      console.log('favCoinsList', favCoinsList)
+      getCoinList(favlist)
+    } else {
+      setLoading(true)
+    }
+  }, [focus])
+
+  //console.log('listData', listData)
+
+  const getCoinList = (favlist) => {
+    const dollarUuid = 'yhjMzLPhuIDl'
     axios.request({
       method: 'GET',
-      url: 'https://coinranking1.p.rapidapi.com/coins',
+      //url: 'https://coinranking1.p.rapidapi.com/coins',
+      //url: `https://coinranking1.p.rapidapi.com/coins?referenceCurrencyUuid=yhjMzLPhuIDl&uuids[0]=9K7m6ufraZ6gh&uuids[1]=HIVsRcGKkPFtW&uuids[2]=Qwsogvtv82FCd&uuids[3]=WcwrkfNI4FUAe&uuids[4]=razxDUgYGNAdQ`,
+      url: `https://coinranking1.p.rapidapi.com/coins?referenceCurrencyUuid=yhjMzLPhuIDl${favlist}`,
       params: {
-        referenceCurrencyUuid: '5k-_VTxqtCEI',
-        timePeriod: '24h',
-        tiers: '1',
+        //referenceCurrencyUuid: dollarUuid,
+        //timePeriod: '24h',
+        //'uuids[]': 'Qwsogvtv82FCd',
+        //'uuids[]': 'razxDUgYGNAdQ', 
         orderBy: 'marketCap',
         orderDirection: 'desc',
-        limit: '4',
+        limit: '50',
         offset: '0'
       },
       headers: {
@@ -79,15 +66,14 @@ export default function Coin() {
         'x-rapidapi-key': process.env.COIN_API
       }
     }).then(function (response) {
-      console.log("response data", response.data);
       setListData(response.data.data.coins)
     }).catch(function (error) {
       console.error(error);
     });
+    setLoading(false)
+  }
 
-  }, [])
 
-  console.log('listData', listData)
 
   const DataItem = ({ rank }) => (
     <Text> Rank: {rank}</Text>
@@ -116,76 +102,58 @@ export default function Coin() {
   const renderItem = ({ item }) => (
 
     < TouchableOpacity onPress={() => { navigation.navigate('CoinPageScreen', { coinId: item.uuid }) }}>
-    <View style={styles.item}>
+      <View style={styles.item}>
 
-      <View style={styles.flexRow}>
-        <SvgUri
-          width="30"
-          height="30"
-          style={styles.image}
-          uri={item.iconUrl}
-        />
-        <View style={{ justifyContent: 'center' }}>
-          <Text
-            style={styles.name}>
-            {item.name}
-          </Text>
-          <Text style={styles.sub}>{item.symbol}</Text>
-        </View>
-        <View style={styles.left}>
-        </View>
-        <View style={styles.left}>
-          <View style={styles.left}>
-            <Text style={styles.price}> ${millify(item.price)}</Text>
-          </View>
-          <PercentageColor
-            val={item.change}
+        <View style={styles.flexRow}>
+          <SvgUri
+            width="30"
+            height="30"
+            style={styles.image}
+            uri={item.iconUrl}
           />
+          <View style={{ justifyContent: 'center' }}>
+            <Text
+              style={styles.name}>
+              {item.name}
+            </Text>
+            <Text style={styles.sub}>{item.symbol}</Text>
+          </View>
+          <View style={styles.left}>
+          </View>
+          <View style={styles.left}>
+            <View style={styles.left}>
+              <Text style={styles.price}> ${millify(item.price)}</Text>
+            </View>
+            <PercentageColor
+              val={item.change}
+            />
+          </View>
         </View>
-      </View>
 
-    </View>
-  </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
   )
 
   return (
 
     <View style={styles.container}>
-      
-      <FlatList
-        data={listData}
-        renderItem={renderItem}
-        keyExtractor={(item, i) => 'key' + i}
-      />
-      
-
-
-      {/*  <Image 
-                    source={{
-                        uri: "https://assets.coingecko.com/coins/images/825/small/binance-coin-logo.png?1547034615",
-                    }}
-                    style={{
-                        height: 30,
-                        width: 30,
-                        marginRight: 10,
-                        alignSelf: 'center',
-                        
-                    }}
-                />
-                <View>
-                <Text style={{fontWeight:'bold', color:'white'}}>Coin</Text>
-                <View style={{flexDirection: 'row'}}>
-                <Text style={{marginRight:5, color:'white'}}>BNB</Text>
-              
-                </View>
-                </View>
-                <View style={{marginLeft:'auto'}}>
-                    <Text style={{fontWeight:'bold', color:'white'}}>$439.55</Text>
-                    <Text style={{color:'#10C22C', textAlign:'right', fontWeight:'bold'}}>2.8%</Text>
-                </View> */}
-
-
-
+      {/* FIX HERE SOME STYLING / ORIENTATION ERROR POPS UP HERE */}
+      {/* 
+      <ScrollView> 
+         */}
+      {!loading ?
+        <FlatList
+          data={listData}
+          renderItem={renderItem}
+          keyExtractor={(item, i) => 'key' + i}
+        />
+        : <Text style={styles.name}>
+          See your favorite coins here
+        </Text>
+      }
+      {/* 
+      </ScrollView>
+       */}
     </View>
 
 

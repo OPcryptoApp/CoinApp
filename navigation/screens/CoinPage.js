@@ -14,7 +14,24 @@ import { Button } from 'react-native-paper';
 import millify from 'millify';
 import Chart from '../../components/Graph/Chart';
 
+import coinService from '../../services/coinService';
 
+import {
+  getFirestore,
+  getDoc,
+  setDoc,
+  deleteDoc,
+  addDoc,
+  collection,
+  updateDoc,
+  doc,
+  onSnapshot,
+  getDocs
+} from "firebase/firestore"
+import {
+  db,
+  auth
+} from '../../firebase'
 
 export default function CoinPageScreen() {
   const [l, setL] = useState(true);
@@ -22,6 +39,7 @@ export default function CoinPageScreen() {
   const route = useRoute();
   const [favorite, setFavorite] = useState(false);
   const [coin, setCoin] = useState(null);
+  const [coins, setCoins] = useState(null);
   let [fetchedCoinData, setFetchedCoinData] = useState(null);
 
   const [iconName, setIconName] = useState('md-star-outline');
@@ -35,30 +53,56 @@ export default function CoinPageScreen() {
 
   const [coinName, setCoinName] = useState('');
   const {
-    params: { coinId },
+    params: {
+      paramCoin,
+      getFavoriteList // Such pro fix
+    },
   } = route;
 
+  const fetchCoinData = async () => {
+    console.log('paramcoin', paramCoin.name)
+    fetchedCoinData = await getSingleCoinData(paramCoin.uuid);
+    setCoin(fetchedCoinData);
+    setSymbol(fetchedCoinData.data.coin.symbol);
+    setPrice(fetchedCoinData.data.coin.price);
+    setImage(fetchedCoinData.data.coin.iconUrl);
+    setChange(fetchedCoinData.data.coin.change);
+    setName(fetchedCoinData.data.coin.name);
+  };
 
 
-  useEffect(() => {
+  const coinCall = async () => {
+    console.log('COINCALL')
+    const coins = await coinService.getUserCoins()
+    console.log('usercoins:', coins)
+    setCoins(coins)
+    return coins
+  }
 
-    const fetchCoinData = async () => {
-      fetchedCoinData = await getSingleCoinData(coinId);
-      setCoin(fetchedCoinData);
-      setSymbol(fetchedCoinData.data.coin.symbol);
-      setPrice(fetchedCoinData.data.coin.price);
-      setImage(fetchedCoinData.data.coin.iconUrl);
-      setChange(fetchedCoinData.data.coin.change);
-      setName(fetchedCoinData.data.coin.name);
-      console.log('fetchedCoinData.data.coin.name:', fetchedCoinData.data.coin.name)
-      console.log('fetchedCoinData.data.coin.name:', fetchedCoinData.data.coin.uuid)
+  const getCoinFavorite = () => {
+    const unsub = onSnapshot(
+      doc(db, auth.currentUser["uid"], "coins", 'lempikolikot', paramCoin.uuid),
+      (doc) => {
+        var fav = false
+        if (doc.data() != undefined) {
+          fav = true
+        } else {
+          fav = false
+        }
+        setFavorite(fav)
+      }
+    )
+  }
 
-      console.log('name in coinPage:', name)
 
-    };
 
+  useEffect(async () => {
     fetchCoinData();
-    setL(false);
+    try {
+      getCoinFavorite()
+    } catch (e) {
+      console.log('error', e)
+    }
   }, []);
 
   const PercentageColor = ({ val }) => {
@@ -79,15 +123,9 @@ export default function CoinPageScreen() {
     }
   };
 
-  const handleFavorite = () => {
-    if (favorite === false) {
-      setIconName('md-star-outline');
-    } else {
-      setIconName('md-star');
-
-    }
-    setFavorite(!favorite);
-    console.log(favorite)
+  const handleFavorite = async () => {
+    coinService.setCoinAsFavorite(paramCoin)
+    getFavoriteList() // such amazing pro fix for updating favorite list
   };
 
 
@@ -95,7 +133,12 @@ export default function CoinPageScreen() {
   return (
 
     <View style={styles.container}>
-      <Ionicons style={styles.favorite} onPress={handleFavorite} name={iconName} size={30} />
+      {favorite ?
+        <Ionicons style={styles.favorite} onPress={handleFavorite} name={'md-star'} size={30} />
+        : <Ionicons style={styles.favorite} onPress={handleFavorite} name={'md-star-outline'} size={30} />
+      }
+
+
       <Text style={styles.itemTitle}>{symbol} </Text>
 
       <SvgUri
@@ -116,6 +159,10 @@ export default function CoinPageScreen() {
       <View>
 
         {l == false && <Chart name={fetchedCoinData}></Chart>}
+      </View>
+
+      <View style={styles.textField}>
+        <Text style={styles.normalText}> {coins != null && coins.name} </Text>
       </View>
 
       <View style={styles.buttonContainer}>

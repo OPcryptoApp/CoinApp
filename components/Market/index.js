@@ -6,46 +6,34 @@ import millify from 'millify';
 import { useNavigation } from "@react-navigation/native";
 import Chart from '../Graph/Chart';
 
-
-
-
-
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 
 // import .env tiedostosta api-avaimet ja muut, jotka ei kuulu githubiin
 import { COIN_API, SECRET_KEY } from "@env"
+import coinService from '../../services/coinService';
 
 
 export default function Market() {
 
   const navigation = useNavigation();
-
-
-
   const [numberOfCoins, setnumberOfCoins] = useState(100)
   const [listData, setListData] = useState([])
   const [searchTerm, setSearchTerm] = useState("");
+  const [favoriteCoins, setFavoriteCoins] = useState(null);
 
   useEffect(async () => {
+
+    getFavoriteList()
+
+
     var a = numberOfCoins
-    try {
-      const value = await AsyncStorage.getItem('@storage_Key')
-      if (value !== null) {
-        console.log('value get', parseInt(value))
-        // value previously stored
-        setnumberOfCoins(parseInt(value))
-        a = parseInt(value)
-      }
-    } catch (e) {
-      // error reading value
-    }
+    const dollarUuid = 'yhjMzLPhuIDl'
 
     axios.request({
       method: 'GET',
       url: 'https://coinranking1.p.rapidapi.com/coins',
       params: {
-        referenceCurrencyUuid: '5k-_VTxqtCEI',
+        referenceCurrencyUuid: dollarUuid,
         timePeriod: '24h',
         tiers: '1',
         orderBy: 'marketCap',
@@ -68,6 +56,11 @@ export default function Market() {
   }, [])
 
 
+  const getFavoriteList = async () => {
+    let fcoins = []
+    fcoins = await coinService.getFavoriteCoins()
+    setFavoriteCoins(fcoins)
+  }
 
   const DataItem = ({ rank }) => (
     <Text>            Rank: {rank}</Text>
@@ -93,35 +86,32 @@ export default function Market() {
     }
   };
 
+  // Ei päivitä lempikolikoiden muutettua :o
+  const printFavoriteStar = (item) => {
+    return favoriteCoins.includes(item.uuid) ? '*' : ''
+  }
 
   const renderItem = ({ item }) => (
 
 
-    < TouchableOpacity onPress={() => { navigation.navigate('CoinPageScreen', { coinId: item.uuid }) }}>
+    < TouchableOpacity onPress={() => {
+      getFavoriteList() // pro fix
+      navigation.navigate('CoinPageScreen', {
+        paramCoin: item,
+        getFavoriteList: getFavoriteList
+      })
+    }}>
 
 
       <View style={styles.item}>
 
         <View style={styles.flexRow}>
 
-
-
-          {/* SVG huutaa error
-                    //TypeError: null is not an object (evaluating 'children.push')
-                    // This error is located at: in SvgXml (created by SvgUri)
-
-                    <SvgUri
-                        width="30"
-                        height="30"
-                        style={styles.image}
-                        uri={item.iconUrl}
-                    />
-                 */}
-
           <View style={{ justifyContent: 'center' }}>
             <Text
               style={styles.name}>
               {item.name}
+              {favoriteCoins != null && printFavoriteStar(item)}
             </Text>
             <Text style={styles.sub}>{item.symbol}</Text>
           </View>
