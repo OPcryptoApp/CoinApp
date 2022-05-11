@@ -3,6 +3,7 @@ import {
   StyleSheet,
   View,
   Text,
+  TextInput
 } from 'react-native';
 import 'react-native-gesture-handler';
 import axios from 'axios';
@@ -13,6 +14,7 @@ import { SvgUri } from 'react-native-svg';
 import { Button } from 'react-native-paper';
 import millify from 'millify';
 import Chart from '../../components/Graph/Chart';
+
 
 import coinService from '../../services/coinService';
 
@@ -33,6 +35,7 @@ import {
   auth
 } from '../../firebase'
 
+
 export default function CoinPageScreen() {
   const [l, setL] = useState(true);
 
@@ -50,6 +53,14 @@ export default function CoinPageScreen() {
   const [price, setPrice] = useState(0);
   const [image, setImage] = useState('');
   const [change, setChange] = useState('');
+  const [amount, setAmount] = useState('');
+  const [amountInUsd, setAmountInUsd] = useState(price * amount);
+
+  //owned coin consts from firebase
+  const [Oname, setOName] = useState('');
+  const [Oamount, setOAmount] = useState('');
+
+
 
   const [coinName, setCoinName] = useState('');
   const {
@@ -72,6 +83,20 @@ export default function CoinPageScreen() {
     setL(false)
   };
 
+  // create a snapdoc to get the coin data from the database
+
+  const getOwnedCoinData = async () => {
+    const docRef = doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      setOName(docSnap.data().name);
+      setOAmount(docSnap.data().amount);
+      console.log(docSnap.data().name + docSnap.data().amount + 'owned');
+    } else {
+      console.log("No data found");
+    }
+  };
 
   const coinCall = async () => {
     console.log('COINCALL')
@@ -95,6 +120,15 @@ export default function CoinPageScreen() {
       }
     )
   }
+  useEffect(() => {
+    fetchCoinData();
+    getOwnedCoinData();
+
+  }, []);
+
+  useEffect(() => { setOAmount(Oamount) }, [Oamount])
+  useEffect(() => { console.log('OAMOUNT' + Oamount) }, [Oamount])
+
 
   const [chartData, setChartData] = useState()
 
@@ -174,6 +208,53 @@ export default function CoinPageScreen() {
     getFavoriteList() // such amazing pro fix for updating favorite list
   };
 
+  const buy = () => {
+    //add coin to firebase with addDoc function
+    const docRef = setDoc(doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name), {
+      name: name,
+      symbol: symbol,
+      price: price,
+      coinId: paramCoin.uuid,
+      amount: parseInt(Oamount) + parseInt(amount),
+      amountInUsd: amountInUsd,
+    });
+  }
+
+
+  const sell = () => {
+    //update the amount of coin in firebase
+    if (amount >= Oamount) {
+      //delete the coin from firebase
+      const docRef = doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name);
+      setDoc(docRef, {
+        //määrä nollaan tai sitten kokko coinin poisto
+        name: name,
+        symbol: symbol,
+        price: price,
+        coinId: paramCoin.uuid,
+        favorite: favorite,
+        amount: 0,
+        amountInUsd: amountInUsd,
+
+      });
+
+    } else {
+      //amountin päivitys, Oamount = firebasecoinin määrä - valittu amount
+      const docRef = doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name);
+      setDoc(docRef, {
+        name: name,
+        symbol: symbol,
+        price: price,
+        coinId: paramCoin.uuid,
+        favorite: favorite,
+        amount: Oamount - amount,
+        amountInUsd: amountInUsd,
+      });
+
+    }
+  }
+
+
 
 
   return (
@@ -184,8 +265,6 @@ export default function CoinPageScreen() {
         : <Ionicons style={styles.favorite} onPress={handleFavorite} name={'md-star-outline'} size={30} />
       }
 
-
-      <Text style={styles.itemTitle}>{symbol} </Text>
 
       <SvgUri
         width="100"
@@ -207,34 +286,37 @@ export default function CoinPageScreen() {
         {l == false && <Chart chartData={chartData} getData={getData}></Chart>}
       </View>
 
-      <View style={styles.textField}>
-        <Text style={styles.normalText}> {coins != null && coins.name} </Text>
-      </View>
+      <Text style={styles.itemTitle}>{name} owned  {Oamount} </Text>
 
       <View style={styles.buttonContainer}>
-
         <Button
           style={styles.button}
           mode="contained"
-          onPress={() => {
-            console.log('buy button pressed');
-          }}
+          onPress={buy}
         >
           Buy
         </Button>
+
+        <TextInput
+          placeholder="amount"
+          keyboardType='numeric'
+          style={[
+            styles.textInput,
+          ]}
+          onChangeText={(amount) => setAmount(amount)}
+          value={amount}
+        />
         <Button
           style={styles.button}
           mode="contained"
-          onPress={() => {
-            console.log('sell button pressed');
-          }}
+          onPress={sell}
         >
           Sell
         </Button>
       </View>
 
 
-    </View>
+    </View >
 
   );
 }
@@ -346,5 +428,16 @@ const styles = StyleSheet.create({
     color: 'white',
     paddingRight: 20,
     fontSize: 30,
+  },
+  textInput: {
+    flex: 1,
+
+    paddingLeft: 10,
+    paddingRight: 10,
+    backgroundColor: 'white',
+    width: 100,
+    height: 50,
+    margin: 5,
+    borderRadius: 20,
   },
 });
