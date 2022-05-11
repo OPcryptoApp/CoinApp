@@ -174,7 +174,6 @@ export default function CoinPageScreen() {
       symbol: symbol,
       price: price,
       coinId: paramCoin.uuid,
-      favorite: favorite,
       amount: parseInt(Oamount) + parseInt(amount),
       amountInUsd: amountInUsd,
     });
