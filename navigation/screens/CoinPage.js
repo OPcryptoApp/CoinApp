@@ -122,7 +122,7 @@ export default function CoinPageScreen() {
       symbol: symbol,
       price: price,
       coinId: paramCoin.uuid,
-      amount: parseInt(Oamount) - parseInt(amount / price),
+      amount: parseFloat(Oamount) - parseFloat(amount / price),
   
     });
    */
@@ -236,31 +236,37 @@ export default function CoinPageScreen() {
     //add coin to firebase with addDoc function
     console.log((amount / price))
     console.log((amount))
+    console.log('OMAOUTN', Oamount)
+    console.log('typeof', typeof (Oamount) == 'number')
+    //if (typeof (Oamount) != 'number') setOAmount(0)
+    console.log('OMAOUTN', Oamount)
+
     const docRef = setDoc(doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name), {
       name: name,
       symbol: symbol,
-      price: price,
+      price: parseFloat(price),
       coinId: paramCoin.uuid,
-      amount: Oamount + (amount / price),
+      amount: typeof (Oamount) == 'number' ? parseFloat(Oamount) / parseFloat(price) + (parseFloat(amount) / parseFloat(price)) : 0.0,
     });
   }
 
 
   // create const handle sell, if amount would be under 0 alert user that he can't sell more than he owns, if not, sell the coin
   const handleSell = () => {
-    console.log(parseInt(amount / price) + parseInt(Oamount / price))
-    if (amount / price > Oamount) {
+    console.log(parseFloat(amount / price) + parseFloat(Oamount / price))
+    console.log('SELLLL', parseFloat(Oamount) / parseFloat(price))
+    console.log('SLELLLL 2 ', (parseFloat(amount) / parseFloat(price)))
+    console.log('(parseFloat(Oamount) / parseFloat(price)) - (parseFloat(amount) / parseFloat(price))', (parseFloat(Oamount) / parseFloat(price)) - (parseFloat(amount) / parseFloat(price)))
+    if (parseFloat(amount) / parseFloat(price) > parseFloat(Oamount)) {
       alert('You cant sell more than you own')
     } else {
-
       const docRef = doc(db, auth.currentUser["uid"], 'ownedCoins', 'coin', name);
       setDoc(docRef, {
-
         name: name,
         symbol: symbol,
-        price: price,
+        price: parseFloat(price),
         coinId: paramCoin.uuid,
-        amount: (Oamount / price) - (amount / price),
+        amount: ((parseFloat(Oamount) / parseFloat(price)) - (parseFloat(amount) / parseFloat(price))),
 
       });
     }
@@ -280,9 +286,9 @@ export default function CoinPageScreen() {
         //määrä nollaan tai sitten kokko coinin poisto
         name: name,
         symbol: symbol,
-        price: price,
+        price: parseFloat(price),
         coinId: paramCoin.uuid,
-        amount: parseInt(Oamount) - parseInt(amount / price),
+        amount: parseFloat(Oamount) - parseFloat(amount / parseFloat(price)),
 
       });
 
@@ -294,7 +300,7 @@ export default function CoinPageScreen() {
         symbol: symbol,
         price: price,
         coinId: paramCoin.uuid,
-        amount: parseInt(Oamount) - parseInt(amount / price),
+        amount: parseFloat(Oamount) - parseFloat(amount / price),
       });
 
     }
@@ -345,7 +351,6 @@ export default function CoinPageScreen() {
               styles.textInput,
             ]}
             onChangeText={(amount) => {
-              amount.replace(/[^0-9]/g, '')
               setAmount(amount)
             }
             }
