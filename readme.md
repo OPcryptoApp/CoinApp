@@ -27,7 +27,10 @@
 
 <h3> KryptoApp </h3>
 
-Meidän työmme on osittain kryptomarkkinoiden kiinnostuksen takia ja osittain pakonedessä tehty puhelinsovellus.
+Meidän työmme on osittain kryptomarkkinoiden ja puhelinkehityksen kiinnostuksien takia tehty puhelinsovellus.
+
+Pysrkimyksemme oli luoda elegantti ja simppeli puhelinsovellus, josta pystyy seuraamaan omia sijoituksia* kryptomarkkinoita helposti taskusta.
+*ei oikeaa valuuttaa
 
 Emme ole kaikista ylpeimpiä tästä suorituksesta, mutta yritimme sentään jotain.
 
